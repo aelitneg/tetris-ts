@@ -1,0 +1,9 @@
+{
+  "name": "tetris-ts",
+  "version": "0.1.0",
+  "description": "Tetris in TypeScript",
+  "main": "index.js",
+  "author": "Andrew Gentile <agentile1990@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
