@@ -4,5 +4,10 @@
             "path": "."
         }
     ],
-    "settings": {}
+    "settings": {
+        "eslint.alwaysShowStatus": true,
+        "prettier.packageManager": "yarn",
+        "prettier.requireConfig": true,
+        "prettier.useEditorConfig": false
+    }
 }
