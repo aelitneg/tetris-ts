@@ -3,6 +3,11 @@ const path = require("path");
 module.exports = {
     mode: "development",
     devtool: "source-map",
+    devServer: {
+        contentBase: "./dist",
+        compress: true,
+        port: 9000,
+    },
     entry: "./src/index.ts",
     output: {
         filename: "main.js",
@@ -10,7 +15,7 @@ module.exports = {
     },
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx"],
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [
