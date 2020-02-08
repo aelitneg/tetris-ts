@@ -5,5 +5,10 @@
   "main": "index.js",
   "author": "Andrew Gentile <agentile1990@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "@typescript-eslint/parser": "^2.19.0",
+    "eslint": "^6.8.0"
+  }
 }
