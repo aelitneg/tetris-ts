@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    background-color: black;
+}
+
+.game-panel {
+    display: flex;
+    flex: 1;
+    background-color: black;
+}
+
+.game-board {
+    flex: 1;
+    align-self: flex-end;
+    border: 1px solid blue;
+    margin: 15px;
+}
+
+.game-row {
+    display: flex;
+    width: 100%;
+}
+
+.game-space {
+    flex: 1;
+    border: 1px solid red;
+}
