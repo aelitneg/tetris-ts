@@ -14,7 +14,7 @@
 .game-board {
     flex: 1;
     align-self: flex-end;
-    border: 1px solid blue;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     margin: 15px;
 }
 
@@ -25,5 +25,10 @@
 
 .game-space {
     flex: 1;
-    border: 1px solid red;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.game-piece {
+    background-color: blue;
+    border: 1px solid darkBlue;
 }

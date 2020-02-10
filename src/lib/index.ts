@@ -11,5 +11,7 @@ export default class Tetris {
         this.uiEngine = new UIEngine(rootElement);
 
         this.uiEngine.initUI();
+
+        this.uiEngine.run();
     }
 }

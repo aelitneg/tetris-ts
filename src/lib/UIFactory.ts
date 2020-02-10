@@ -1,3 +1,5 @@
+import GamePiece from "./GamePiece";
+
 export default class UIFactory {
     /**
      * Create Main Container
@@ -55,5 +57,16 @@ export default class UIFactory {
 
             gameBoard.appendChild(row);
         }
+    }
+
+    static drawGamePiece(gameBoard: Element, gamePiece: GamePiece) {
+        console.log("[tetris-ts UIFactory] drawGamePiece", gamePiece);
+
+        gamePiece.position.forEach(piece => {
+            console.log(gameBoard.children[piece.y].children[piece.x]);
+            gameBoard.children[piece.y].children[piece.x].classList.add(
+                "game-piece"
+            );
+        });
     }
 }
