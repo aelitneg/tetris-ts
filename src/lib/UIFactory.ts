@@ -1,4 +1,4 @@
-import GamePiece from "./GamePiece";
+import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
 
 export default class UIFactory {
     /**
@@ -60,11 +60,16 @@ export default class UIFactory {
     }
 
     static drawGamePiece(gameBoard: Element, gamePiece: GamePiece) {
-        console.log("[tetris-ts UIFactory] drawGamePiece", gamePiece);
-
         gamePiece.position.forEach(piece => {
-            console.log(gameBoard.children[piece.y].children[piece.x]);
             gameBoard.children[piece.y].children[piece.x].classList.add(
+                "game-piece"
+            );
+        });
+    }
+
+    static eraseGamePiece(gameBoard: Element, gamePiece: GamePiece) {
+        gamePiece.position.forEach(piece => {
+            gameBoard.children[piece.y].children[piece.x].classList.remove(
                 "game-piece"
             );
         });

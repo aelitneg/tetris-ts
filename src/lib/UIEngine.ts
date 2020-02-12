@@ -1,41 +1,34 @@
-import GamePiece from "./GamePiece";
+import { GAME_COLS, GAME_ROWS } from "./Config";
+import EventBus from "./EventBus";
+import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
 import UIFactory from "./UIFactory";
 import "./styles.scss";
 
-const GAME_COLS: number = 10;
-const GAME_ROWS: number = 20;
-
-interface State {
-    state: boolean;
-}
-
-interface stateRow {
-    row: Array<State>;
-}
-
 export default class UIEngine {
+    eventBus: EventBus;
+
     rootElement: Element;
     uiElements: { [key: string]: Element };
-    gamePieces: Array<GamePiece>;
-    activePiece: GamePiece;
 
     constructor(rootElement: Element) {
         console.log(
-            `[tetris-ts UIEngine] ${rootElement.clientWidth}x${rootElement.clientHeight}`
+            `[tetris-ts UIEngine] rootElement dimensions ${rootElement.clientWidth}x${rootElement.clientHeight}`
         );
 
         this.rootElement = rootElement;
+
+        this.eventBus = EventBus.getInstance();
+
         this.uiElements = {};
 
-        this.initListeners();
+        this.createInputListeners();
+        this.setupEventHandlers();
     }
 
     /**
      * Build the Foundation UI Elements
      */
     initUI() {
-        console.log("tetris-ts UIEngine] initUI()");
-
         this.uiElements["container"] = UIFactory.createMainContainer();
         this.rootElement.appendChild(this.uiElements["container"]);
 
@@ -50,49 +43,57 @@ export default class UIEngine {
             GAME_ROWS,
             GAME_COLS
         );
+
+        this.eventBus.publish("UI_READY");
     }
 
     /**
      * Add Key Listeners and Bind to Handlers
      */
-    initListeners() {
+    createInputListeners() {
         document.addEventListener("keyup", e => {
             switch (e.code) {
-                case "ArrowUp":
-                    console.log("ArrowUp");
-                    break;
-                case "ArrowDown":
-                    console.log("ArrowDown");
-                    break;
                 case "ArrowLeft":
-                    console.log("ArrowLeft");
+                    this.eventBus.publish("INPUT_LEFT");
                     break;
                 case "ArrowRight":
-                    console.log("ArrowRight");
+                    this.eventBus.publish("INPUT_RIGHT");
+                    break;
+                case "ArrowDown":
+                    this.eventBus.publish("INPUT_DOWN");
+                    break;
+                case "ArrowUp":
+                    this.eventBus.publish("INPUT_UP");
                     break;
             }
         });
     }
 
     /**
-     * Run the Game
+     * Setup Event Handlers for EventBus Events
      */
-    run() {
-        this.generateGamePiece();
+    setupEventHandlers() {
+        this.eventBus.subscribe("INIT", this.initUI.bind(this));
+
+        this.eventBus.subscribe("DRAW_ACTIVE", this.drawActivePiece.bind(this));
+
+        this.eventBus.subscribe(
+            "ERASE_ACTIVE",
+            this.eraseActivePiece.bind(this)
+        );
     }
 
     /**
-     * Generate a new Game Piece
+     * Draw the active game piece
      */
-    generateGamePiece() {
-        const gamePiece = new GamePiece([
-            { x: 0, y: 0 },
-            { x: 1, y: 0 },
-            { x: 2, y: 0 },
-            { x: 3, y: 0 },
-        ]);
+    drawActivePiece(gamePiece: GamePiece) {
+        UIFactory.drawGamePiece(this.uiElements["gameBoard"], gamePiece);
+    }
 
-        this.activePiece = gamePiece;
-        UIFactory.drawGamePiece(this.uiElements["gameBoard"], this.activePiece);
+    /**
+     * Erase active game piece
+     */
+    eraseActivePiece(gamePiece: GamePiece) {
+        UIFactory.eraseGamePiece(this.uiElements["gameBoard"], gamePiece);
     }
 }
