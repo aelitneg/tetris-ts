@@ -1,10 +1,19 @@
 import ICoordinate from "./ICoordinate"; // eslint-disable-line no-unused-vars
-
+import { GAME_COLS, GAME_ROWS } from "./Config";
 export default class GamePiece {
     position: Array<ICoordinate>;
+    xOffset: number;
+    cols: number;
+    rows: number;
+    constructor() {
+        this.cols = GAME_COLS;
+        this.rows = GAME_ROWS;
 
-    constructor(initialPosition: Array<ICoordinate>) {
-        this.position = initialPosition;
+        // Place piece in the middle of the Game Board
+        this.xOffset =
+            ((GAME_COLS / 2) % 2
+                ? GAME_COLS / 2
+                : GAME_COLS / 2 - (GAME_COLS % 2)) - 1;
     }
 
     /**
@@ -44,5 +53,14 @@ export default class GamePiece {
         });
 
         return transform;
+    }
+
+    /**
+     * Return generatl transform
+     * This method is overriden in each GamePiece sub class
+     */
+    getTransform() {
+        // Return default transform
+        return this.position;
     }
 }
