@@ -51,7 +51,7 @@ export default class UIEngine {
      * Add Key Listeners and Bind to Handlers
      */
     createInputListeners() {
-        document.addEventListener("keyup", e => {
+        document.addEventListener("keydown", e => {
             switch (e.code) {
                 case "ArrowLeft":
                     this.eventBus.publish("INPUT_LEFT");
