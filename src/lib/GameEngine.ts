@@ -1,7 +1,26 @@
 import { GAME_COLS, GAME_ROWS } from "./Config";
-import GamePiece from "./GamePiece";
+
+import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
+import BlockType from "./GamePieces/BlockType";
+import LineType from "./GamePieces/LineType";
+import ZType from "./GamePieces/ZType";
+import ZInvType from "./GamePieces/ZInvType";
+import TType from "./GamePieces/TType";
+import LType from "./GamePieces/LType";
+import LInvType from "./GamePieces/LInvType";
+
 import EventBus from "./EventBus";
 import ICoordinate from "./ICoordinate"; // eslint-disable-line no-unused-vars
+
+enum GamePieceType {
+    BLOCK, // eslint-disable-line no-unused-vars
+    LINE, // eslint-disable-line no-unused-vars
+    Z, // eslint-disable-line no-unused-vars
+    Z_INV, // eslint-disable-line no-unused-vars
+    T, // eslint-disable-line no-unused-vars
+    L, // eslint-disable-line no-unused-vars
+    L_INV, // eslint-disable-line no-unused-vars
+}
 
 export default class GameEngine {
     stateMap: boolean[][];
@@ -58,12 +77,39 @@ export default class GameEngine {
      * Generate a new GamePiece
      */
     generateGamePiece() {
-        const gamePiece = new GamePiece([
-            { x: 0, y: 0 },
-            { x: 1, y: 0 },
-            { x: 2, y: 0 },
-            { x: 3, y: 0 },
-        ]);
+        const gamePieceType: GamePieceType = Math.floor(
+            Math.random() * Math.floor(7)
+        );
+
+        let gamePiece: GamePiece;
+
+        switch (gamePieceType as GamePieceType) {
+            case GamePieceType.BLOCK:
+                gamePiece = new BlockType();
+                break;
+            case GamePieceType.LINE:
+                gamePiece = new LineType();
+                break;
+            case GamePieceType.Z:
+                gamePiece = new ZType();
+                break;
+            case GamePieceType.Z_INV:
+                gamePiece = new ZInvType();
+                break;
+            case GamePieceType.T:
+                gamePiece = new TType();
+                break;
+            case GamePieceType.L:
+                gamePiece = new LType();
+                break;
+            case GamePieceType.L_INV:
+                gamePiece = new LInvType();
+                break;
+            default:
+                throw Error(
+                    `[tetris-ts] Invalid GamePieceType '${gamePieceType}'`
+                );
+        }
 
         this.activePiece = gamePiece;
 
@@ -144,8 +190,17 @@ export default class GameEngine {
      * Transform (rotate) a gamePiece
      */
     transform() {
-        console.log("GameEngine - transform");
-        this.eventBus.publish("TRANSFORM");
+        const transform: Array<ICoordinate> = this.activePiece.getTransform();
+
+        if (this.validateTransform(transform)) {
+            this.removeFromStateMap(this.activePiece);
+            this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
+
+            this.activePiece.position = transform;
+
+            this.addToStateMap(this.activePiece);
+            this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+        }
     }
 
     /**
@@ -157,6 +212,7 @@ export default class GameEngine {
 
         transform.forEach(p => {
             if (!this.validateCoordinateTransform(p)) {
+                console.warn("[tetris-ts GameEngine] validateTransform failed");
                 isValid = false;
             }
         });
