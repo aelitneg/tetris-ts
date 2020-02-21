@@ -4,6 +4,7 @@ interface IHandler {
     event: string;
     handler: Function;
     gamePiece?: GamePiece;
+    rows?: Array<number>;
 }
 
 export default class EventBus {
@@ -29,10 +30,10 @@ export default class EventBus {
         });
     }
 
-    publish(event: string, gamePiece?: GamePiece) {
+    publish(event: string, gamePiece?: GamePiece, rows?: Array<number>) {
         this.handlers.forEach(h => {
             if (h.event === event) {
-                h.handler(gamePiece);
+                h.handler(gamePiece || rows);
             }
         });
     }

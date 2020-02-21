@@ -1,5 +1,5 @@
-import { GAME_COLS, GAME_ROWS } from "./Config";
 import EventBus from "./EventBus";
+import { GAME_COLS, GAME_ROWS } from "./Config";
 import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
 import UIFactory from "./UIFactory";
 import "./styles.scss";
@@ -81,6 +81,8 @@ export default class UIEngine {
             "ERASE_ACTIVE",
             this.eraseActivePiece.bind(this)
         );
+
+        this.eventBus.subscribe("REMOVE_ROWS", this.eraseRows.bind(this));
     }
 
     /**
@@ -95,5 +97,16 @@ export default class UIEngine {
      */
     eraseActivePiece(gamePiece: GamePiece) {
         UIFactory.eraseGamePiece(this.uiElements["gameBoard"], gamePiece);
+    }
+
+    /**
+     * Remove rows from  game board
+     * @param rows row indexes to remove
+     */
+    eraseRows(rows: Array<number>) {
+        rows.forEach(r => {
+            UIFactory.eraseRow(this.uiElements["gameBoard"], r);
+            UIFactory.drawRow(this.uiElements["gameBoard"], 0);
+        });
     }
 }

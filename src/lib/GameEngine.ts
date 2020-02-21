@@ -22,13 +22,22 @@ enum GamePieceType {
     L_INV, // eslint-disable-line no-unused-vars
 }
 
+enum GameState {
+    INIT, // eslint-disable-line no-unused-vars
+    PLAYING, // eslint-disable-line no-unused-vars
+    STOPPED, // eslint-disable-line no-unused-vars
+}
+
 export default class GameEngine {
     stateMap: boolean[][];
     eventBus: EventBus;
-    gamePieces: Array<GamePiece>;
     activePiece: GamePiece;
+    gameState: GameState;
+    lineCount: number;
 
     constructor() {
+        this.gameState = GameState.INIT;
+
         this.initStateMap();
 
         this.eventBus = EventBus.getInstance();
@@ -70,7 +79,34 @@ export default class GameEngine {
      */
     startGame() {
         console.log("[tetris-ts GameEngine] Starting Game");
+        this.gameState = GameState.PLAYING;
+        this.lineCount = 0;
+
         this.generateGamePiece();
+
+        setTimeout(() => {
+            this.advanceActivePiece();
+        }, 1000);
+    }
+
+    /**
+     * Main loop. Move GamePiece down and generate
+     * new ones.
+     */
+    advanceActivePiece() {
+        if (this.activePiece && this.gameState == GameState.PLAYING) {
+            if (this.moveDown()) {
+                setTimeout(() => {
+                    this.advanceActivePiece();
+                }, 1000);
+            } else {
+                this.checkCompleteRows();
+                this.generateGamePiece();
+                setTimeout(() => {
+                    this.advanceActivePiece();
+                }, 1000);
+            }
+        }
     }
 
     /**
@@ -116,6 +152,38 @@ export default class GameEngine {
         this.addToStateMap(this.activePiece);
 
         this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+    }
+
+    /**
+     * Check for rows that are complete
+     */
+    checkCompleteRows() {
+        const completeRows: Array<number> = [];
+
+        for (let i: number = 0; i < GAME_ROWS; i++) {
+            let sum: number = 0;
+            for (let j: number = 0; j < GAME_COLS; j++) {
+                if (this.stateMap[i][j]) {
+                    sum++;
+                }
+            }
+
+            if (sum === GAME_COLS) {
+                completeRows.push(i);
+            }
+        }
+
+        if (completeRows.length) {
+            completeRows.forEach(i => {
+                this.stateMap.splice(i, 1);
+                const row: Array<boolean> = [];
+                for (let i: number = 0; i < GAME_COLS; i++) {
+                    row.push(false);
+                }
+                this.stateMap.unshift(row);
+            });
+            this.eventBus.publish("REMOVE_ROWS", null, completeRows);
+        }
     }
 
     /**
@@ -183,7 +251,10 @@ export default class GameEngine {
 
             this.addToStateMap(this.activePiece);
             this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -225,8 +296,6 @@ export default class GameEngine {
      */
     validateCoordinateTransform(c: ICoordinate) {
         try {
-            let isValid: boolean = true;
-
             // Check if coordinate is occupied by part of activePiece
             if (this.isActivePiece(c)) {
                 throw true;
@@ -237,20 +306,12 @@ export default class GameEngine {
                 throw false;
             }
 
-            // Check stateMap for existing pieces
-            for (let i: number = 0; i < GAME_ROWS; i++) {
-                for (let j: number = 0; j < GAME_COLS; j++) {
-                    if (this.stateMap[i][j]) {
-                        // Check if position on stateMap is part of activePiece
-                        if (this.isActivePiece({ x: j, y: i })) {
-                            throw true;
-                        }
-
-                        throw false;
-                    }
-                }
+            // Check stateMap for coordinate
+            if (this.stateMap[c.y][c.x]) {
+                throw false;
             }
-            return isValid;
+
+            return true;
         } catch (result) {
             return result;
         }
