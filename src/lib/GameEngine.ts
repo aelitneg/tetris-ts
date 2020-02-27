@@ -80,31 +80,29 @@ export default class GameEngine {
     startGame() {
         console.log("[tetris-ts GameEngine] Starting Game");
         this.gameState = GameState.PLAYING;
-        this.lineCount = 0;
 
-        this.generateGamePiece();
-
-        setTimeout(() => {
-            this.advanceActivePiece();
-        }, 1000);
+        this.run();
     }
 
     /**
      * Main loop. Move GamePiece down and generate
      * new ones.
      */
-    advanceActivePiece() {
-        if (this.activePiece && this.gameState == GameState.PLAYING) {
-            if (this.moveDown()) {
+    run() {
+        if (this.gameState == GameState.PLAYING) {
+            if (!this.activePiece) {
+                this.generateGamePiece();
+            }
+
+            if (this.validateTransform(this.activePiece.getDownTransform())) {
                 setTimeout(() => {
-                    this.advanceActivePiece();
+                    this.moveDown();
+                    this.run();
                 }, 1000);
             } else {
                 this.checkCompleteRows();
                 this.generateGamePiece();
-                setTimeout(() => {
-                    this.advanceActivePiece();
-                }, 1000);
+                this.run();
             }
         }
     }
@@ -147,10 +145,12 @@ export default class GameEngine {
                 );
         }
 
+        if (!this.validateTransform(gamePiece.position)) {
+            this.gameState = GameState.STOPPED;
+            console.log("GAME OVER");
+        }
+
         this.activePiece = gamePiece;
-
-        this.addToStateMap(this.activePiece);
-
         this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
     }
 
@@ -251,10 +251,7 @@ export default class GameEngine {
 
             this.addToStateMap(this.activePiece);
             this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
-            return true;
         }
-
-        return false;
     }
 
     /**
@@ -283,7 +280,6 @@ export default class GameEngine {
 
         transform.forEach(p => {
             if (!this.validateCoordinateTransform(p)) {
-                console.warn("[tetris-ts GameEngine] validateTransform failed");
                 isValid = false;
             }
         });
