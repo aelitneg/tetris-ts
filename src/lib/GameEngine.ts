@@ -90,11 +90,10 @@ export default class GameEngine {
      */
     run() {
         if (this.gameState == GameState.PLAYING) {
-            if (!this.activePiece) {
-                this.generateGamePiece();
-            }
-
-            if (this.validateTransform(this.activePiece.getDownTransform())) {
+            if (
+                this.activePiece &&
+                this.validateTransform(this.activePiece.getDownTransform())
+            ) {
                 setTimeout(() => {
                     this.moveDown();
                     this.run();
@@ -104,6 +103,12 @@ export default class GameEngine {
                 this.generateGamePiece();
                 this.run();
             }
+        } else {
+            this.activePiece = null;
+            console.log("GAME OVER");
+            console.log("POINTS:", this.points);
+            console.log("LINES:", this.lineCount);
+            console.log("LEVEL:", this.level);
         }
     }
 
@@ -145,13 +150,28 @@ export default class GameEngine {
                 );
         }
 
-        if (!this.validateTransform(gamePiece.position)) {
+        if (!this.validateGamePiece(gamePiece.position)) {
             this.gameState = GameState.STOPPED;
-            console.log("GAME OVER");
         }
 
         this.activePiece = gamePiece;
+        this.addToStateMap(this.activePiece);
         this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+    }
+
+    /**
+     * Check if coordinates are already occupied
+     * @param gamePiece
+     */
+    validateGamePiece(position: Array<ICoordinate>) {
+        let isValid = true;
+        position.forEach(p => {
+            if (this.stateMap[p.y][p.x]) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
     }
 
     /**
