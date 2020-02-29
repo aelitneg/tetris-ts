@@ -34,6 +34,8 @@ export default class GameEngine {
     activePiece: GamePiece;
     gameState: GameState;
     lineCount: number;
+    level: number;
+    points: number;
 
     constructor() {
         this.gameState = GameState.INIT;
@@ -81,6 +83,10 @@ export default class GameEngine {
         console.log("[tetris-ts GameEngine] Starting Game");
         this.gameState = GameState.PLAYING;
 
+        this.points = 0;
+        this.lineCount = 0;
+        this.level = 0;
+
         this.run();
     }
 
@@ -97,7 +103,7 @@ export default class GameEngine {
                 setTimeout(() => {
                     this.moveDown();
                     this.run();
-                }, 1000);
+                }, 1000 - this.level * 100);
             } else {
                 this.checkCompleteRows();
                 this.generateGamePiece();
@@ -202,6 +208,9 @@ export default class GameEngine {
                 }
                 this.stateMap.unshift(row);
             });
+
+            this.calculateRowPoints(completeRows.length);
+
             this.eventBus.publish("REMOVE_ROWS", null, completeRows);
         }
     }
@@ -348,6 +357,32 @@ export default class GameEngine {
             return false;
         } catch (result) {
             return result;
+        }
+    }
+
+    calculateRowPoints(rowCount: number) {
+        let rowPoints: number;
+        switch (rowCount) {
+            case 1:
+                rowPoints = 40;
+                break;
+            case 2:
+                rowPoints = 100;
+                break;
+            case 3:
+                rowPoints = 300;
+                break;
+            case 4:
+                rowPoints = 1200;
+                break;
+        }
+
+        this.points += rowPoints * (this.level + 1);
+
+        this.lineCount = this.lineCount + rowCount;
+
+        if (this.lineCount >= (this.level + 1) * 10) {
+            this.level++;
         }
     }
 }
