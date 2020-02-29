@@ -1,10 +1,12 @@
 import ICoordinate from "./ICoordinate"; // eslint-disable-line no-unused-vars
-import { GAME_COLS, GAME_ROWS } from "./Config";
+import { COLORS, IColor, GAME_COLS, GAME_ROWS } from "./Config";
+
 export default class GamePiece {
     position: Array<ICoordinate>;
     xOffset: number;
     cols: number;
     rows: number;
+    color: IColor;
     constructor() {
         this.cols = GAME_COLS;
         this.rows = GAME_ROWS;
@@ -14,6 +16,9 @@ export default class GamePiece {
             ((GAME_COLS / 2) % 2
                 ? GAME_COLS / 2
                 : GAME_COLS / 2 - (GAME_COLS % 2)) - 1;
+
+        this.color =
+            COLORS[Math.floor(Math.random() * Math.floor(COLORS.length))];
     }
 
     /**

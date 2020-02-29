@@ -147,9 +147,16 @@ export default class UIEngine {
      */
     drawGamePiece(gamePiece: GamePiece) {
         gamePiece.position.forEach(piece => {
-            this.uiElements.gameBoard.children[piece.y].children[
+            const el = this.uiElements.gameBoard.children[piece.y].children[
                 piece.x
-            ].classList.add("game-piece");
+            ];
+            el.classList.add("game-piece");
+            el.setAttribute(
+                "style",
+                `background-color: ${gamePiece.color.color};` +
+                    " " +
+                    `border-color: ${gamePiece.color.border};`
+            );
         });
     }
 
@@ -159,9 +166,11 @@ export default class UIEngine {
      */
     eraseGamePiece(gamePiece: GamePiece) {
         gamePiece.position.forEach(piece => {
-            this.uiElements.gameBoard.children[piece.y].children[
+            const el = this.uiElements.gameBoard.children[piece.y].children[
                 piece.x
-            ].classList.remove("game-piece");
+            ];
+            el.classList.remove("game-piece");
+            el.setAttribute("style", "");
         });
     }
 
