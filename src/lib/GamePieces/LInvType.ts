@@ -1,5 +1,4 @@
 import GamePiece from "../GamePiece";
-import ICoordinate from "../ICoordinate"; // eslint-disable-line no-unused-vars
 
 export default class LInvType extends GamePiece {
     /**

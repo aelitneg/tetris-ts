@@ -10,7 +10,6 @@ import LType from "./GamePieces/LType";
 import LInvType from "./GamePieces/LInvType";
 
 import EventBus from "./EventBus";
-import ICoordinate from "./ICoordinate"; // eslint-disable-line no-unused-vars
 
 enum GamePieceType {
     BLOCK, // eslint-disable-line no-unused-vars

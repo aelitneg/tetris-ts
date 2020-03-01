@@ -1,4 +1,3 @@
-import ICoordinate from "./ICoordinate"; // eslint-disable-line no-unused-vars
 import { COLORS, IColor, GAME_COLS, GAME_ROWS } from "./Config";
 
 export default class GamePiece {
