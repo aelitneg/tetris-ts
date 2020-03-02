@@ -1,7 +1,6 @@
-import EventBus from "./EventBus";
-import { GAME_COLS, GAME_ROWS } from "./Config";
-import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
-import "./styles.scss";
+import EventBus from "../EventBus";
+import { GAME_COLS, GAME_ROWS } from "../Config";
+import "../styles.scss";
 
 export default class UIEngine {
     eventBus: EventBus;
@@ -27,7 +26,7 @@ export default class UIEngine {
     /**
      * Build the Foundation UI Elements
      */
-    initUI() {
+    initUI(): void {
         this.createMainContainer();
 
         this.createGamePanel();
@@ -42,7 +41,7 @@ export default class UIEngine {
     /**
      * Add Key Listeners and Bind to Handlers
      */
-    createInputListeners() {
+    createInputListeners(): void {
         document.addEventListener("keydown", e => {
             switch (e.code) {
                 case "ArrowLeft":
@@ -64,7 +63,7 @@ export default class UIEngine {
     /**
      * Setup Event Handlers for EventBus Events
      */
-    setupEventHandlers() {
+    setupEventHandlers(): void {
         this.eventBus.subscribe("INIT", this.initUI.bind(this));
 
         this.eventBus.subscribe("DRAW_ACTIVE", this.drawGamePiece.bind(this));
@@ -78,7 +77,7 @@ export default class UIEngine {
      * Remove rows from  game board
      * @param rows row indexes to remove
      */
-    completeRow(rows: Array<number>) {
+    completeRow(rows: Array<number>): void {
         rows.forEach(row => {
             this.uiElements.gameBoard.children[row].remove();
             this.drawRow();
@@ -88,7 +87,7 @@ export default class UIEngine {
     /**
      * Create Main Container
      */
-    createMainContainer() {
+    createMainContainer(): void {
         const container = document.createElement("div");
         container.classList.add("container");
 
@@ -100,7 +99,7 @@ export default class UIEngine {
     /**
      * Create Container for Game Board
      */
-    createGamePanel() {
+    createGamePanel(): void {
         const gamePanel = document.createElement("div");
         gamePanel.classList.add("panel");
         gamePanel.classList.add("game-panel");
@@ -112,7 +111,7 @@ export default class UIEngine {
     /**
      * Create Game Board
      */
-    createGameBoard() {
+    createGameBoard(): void {
         const gameBoard = document.createElement("div");
         gameBoard.classList.add("game-board");
 
@@ -124,7 +123,7 @@ export default class UIEngine {
     /**
      * Draw Spaces on Game Board
      */
-    createGameBoardSpaces() {
+    createGameBoardSpaces(): void {
         for (let r = 0; r < GAME_ROWS; r++) {
             const row = document.createElement("div");
             row.classList.add("game-row");
@@ -145,7 +144,7 @@ export default class UIEngine {
      * Draw a game piece on the game board
      * @param gamePiece
      */
-    drawGamePiece(gamePiece: GamePiece) {
+    drawGamePiece(gamePiece: GamePiece): void {
         gamePiece.position.forEach(piece => {
             const el = this.uiElements.gameBoard.children[piece.y].children[
                 piece.x
@@ -164,7 +163,7 @@ export default class UIEngine {
      * Remove a game piece from the game board
      * @param gamePiece
      */
-    eraseGamePiece(gamePiece: GamePiece) {
+    eraseGamePiece(gamePiece: GamePiece): void {
         gamePiece.position.forEach(piece => {
             const el = this.uiElements.gameBoard.children[piece.y].children[
                 piece.x
@@ -177,7 +176,7 @@ export default class UIEngine {
     /**
      * Draw a row on the game board
      */
-    drawRow() {
+    drawRow(): void {
         const row = document.createElement("div");
         row.classList.add("game-row");
         row.style.cssText = `height: ${this.uiElements.gameBoard.clientWidth /

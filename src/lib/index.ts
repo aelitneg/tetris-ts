@@ -22,11 +22,11 @@ export default class Tetris {
         this.eventBus.publish("INIT");
     }
 
-    setupEventHandlers() {
+    setupEventHandlers(): void {
         this.eventBus.subscribe("UI_READY", this.play.bind(this));
     }
 
-    play() {
+    play(): void {
         this.eventBus.publish("PLAY");
     }
 }

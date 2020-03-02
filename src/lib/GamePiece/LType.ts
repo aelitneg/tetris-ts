@@ -1,10 +1,10 @@
-import GamePiece from "../GamePiece";
+import GamePiece from ".";
 
-export default class TType extends GamePiece {
+export default class LType extends GamePiece {
     /**
      * Piece Map
      * 0 1 2
-     *   3
+     * 3
      */
     constructor() {
         super();
@@ -13,7 +13,7 @@ export default class TType extends GamePiece {
             { x: this.xOffset - 1, y: 0 },
             { x: this.xOffset, y: 0 },
             { x: this.xOffset + 1, y: 0 },
-            { x: this.xOffset, y: 1 },
+            { x: this.xOffset - 1, y: 1 },
         ];
     }
 
@@ -21,15 +21,15 @@ export default class TType extends GamePiece {
      * Determine the orientation of the piece to
      * peform the correct transformation
      */
-    getTransform() {
-        if (this.position[3].y === this.position[1].y) {
-            if (this.position[3].x < this.position[1].x) {
+    getTransform(): Array<Coordinate> {
+        if (this.position[0].y === this.position[3].y) {
+            if (this.position[0].x > this.position[3].x) {
                 return this._180Transform();
             } else {
                 return this._0Transform();
             }
         } else {
-            if (this.position[3].y > this.position[1].y) {
+            if (this.position[0].y < this.position[3].y) {
                 return this._90Transform();
             } else {
                 return this._270Transform();
@@ -38,18 +38,15 @@ export default class TType extends GamePiece {
     }
 
     /**
-     * Transform to 0
+     * Rotate piece to 0
      * @param xOffset
      * @param yOffset
      */
-    private _0Transform(
-        xOffset?: number,
-        yOffset?: number
-    ): Array<ICoordinate> {
+    private _0Transform(xOffset?: number, yOffset?: number): Array<Coordinate> {
         xOffset = xOffset ? xOffset : 0;
         yOffset = yOffset ? yOffset : 0;
 
-        const transform: Array<ICoordinate> = [
+        const transform: Array<Coordinate> = [
             {
                 x: this.position[0].x + xOffset,
                 y: this.position[0].y - 2 + yOffset,
@@ -63,12 +60,12 @@ export default class TType extends GamePiece {
                 y: this.position[2].y + yOffset,
             },
             {
-                x: this.position[3].x + xOffset,
-                y: this.position[3].y + yOffset,
+                x: this.position[3].x - 1 + xOffset,
+                y: this.position[3].y - 1 + yOffset,
             },
         ];
 
-        for (let i: number = 0; i < transform.length; i++) {
+        for (let i = 0; i < transform.length; i++) {
             if (transform[i].x < 0) {
                 return this._0Transform(++xOffset, yOffset);
             } else if (transform[i].x >= this.cols) {
@@ -84,18 +81,18 @@ export default class TType extends GamePiece {
     }
 
     /**
-     * Transform to 90
+     * Rotate piece to 90
      * @param xOffset
      * @param yOffset
      */
     private _90Transform(
         xOffset?: number,
         yOffset?: number
-    ): Array<ICoordinate> {
+    ): Array<Coordinate> {
         xOffset = xOffset ? xOffset : 0;
         yOffset = yOffset ? yOffset : 0;
 
-        const transform: Array<ICoordinate> = [
+        const transform: Array<Coordinate> = [
             {
                 x: this.position[0].x + 2 + xOffset,
                 y: this.position[0].y + yOffset,
@@ -109,12 +106,12 @@ export default class TType extends GamePiece {
                 y: this.position[2].y + 2 + yOffset,
             },
             {
-                x: this.position[3].x + xOffset,
-                y: this.position[3].y + yOffset,
+                x: this.position[3].x + 1 + xOffset,
+                y: this.position[3].y - 1 + yOffset,
             },
         ];
 
-        for (let i: number = 0; i < transform.length; i++) {
+        for (let i = 0; i < transform.length; i++) {
             if (transform[i].x < 0) {
                 return this._90Transform(++xOffset, yOffset);
             } else if (transform[i].x >= this.cols) {
@@ -130,18 +127,18 @@ export default class TType extends GamePiece {
     }
 
     /**
-     * Transform to 180
+     * Rotate piece to 180
      * @param xOffset
      * @param yOffset
      */
     private _180Transform(
         xOffset?: number,
         yOffset?: number
-    ): Array<ICoordinate> {
+    ): Array<Coordinate> {
         xOffset = xOffset ? xOffset : 0;
         yOffset = yOffset ? yOffset : 0;
 
-        const transform: Array<ICoordinate> = [
+        const transform: Array<Coordinate> = [
             {
                 x: this.position[0].x + xOffset,
                 y: this.position[0].y + 2 + yOffset,
@@ -155,12 +152,11 @@ export default class TType extends GamePiece {
                 y: this.position[2].y + yOffset,
             },
             {
-                x: this.position[3].x + xOffset,
-                y: this.position[3].y + yOffset,
+                x: this.position[3].x + 1 + xOffset,
+                y: this.position[3].y + 1 + yOffset,
             },
         ];
-
-        for (let i: number = 0; i < transform.length; i++) {
+        for (let i = 0; i < transform.length; i++) {
             if (transform[i].x < 0) {
                 return this._180Transform(++xOffset, yOffset);
             } else if (transform[i].x >= this.cols) {
@@ -176,18 +172,18 @@ export default class TType extends GamePiece {
     }
 
     /**
-     * Transform to 270
+     * Rotate piece to 0
      * @param xOffset
      * @param yOffset
      */
     private _270Transform(
         xOffset?: number,
         yOffset?: number
-    ): Array<ICoordinate> {
+    ): Array<Coordinate> {
         xOffset = xOffset ? xOffset : 0;
         yOffset = yOffset ? yOffset : 0;
 
-        const transform: Array<ICoordinate> = [
+        const transform: Array<Coordinate> = [
             {
                 x: this.position[0].x - 2 + xOffset,
                 y: this.position[0].y + yOffset,
@@ -201,12 +197,12 @@ export default class TType extends GamePiece {
                 y: this.position[2].y - 2 + yOffset,
             },
             {
-                x: this.position[3].x + xOffset,
-                y: this.position[3].y + yOffset,
+                x: this.position[3].x - 1 + xOffset,
+                y: this.position[3].y + 1 + yOffset,
             },
         ];
 
-        for (let i: number = 0; i < transform.length; i++) {
+        for (let i = 0; i < transform.length; i++) {
             if (transform[i].x < 0) {
                 return this._270Transform(++xOffset, yOffset);
             } else if (transform[i].x >= this.cols) {

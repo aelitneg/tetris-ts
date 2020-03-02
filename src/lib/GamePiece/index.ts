@@ -1,11 +1,11 @@
-import { COLORS, IColor, GAME_COLS, GAME_ROWS } from "./Config";
+import { COLORS, GAME_COLS, GAME_ROWS } from "../Config";
 
-export default class GamePiece {
-    position: Array<ICoordinate>;
+export default class GamePieceImpl implements GamePiece {
+    position: Array<Coordinate>;
     xOffset: number;
     cols: number;
     rows: number;
-    color: IColor;
+    color: Color;
     constructor() {
         this.cols = GAME_COLS;
         this.rows = GAME_ROWS;
@@ -23,8 +23,8 @@ export default class GamePiece {
     /**
      * Get coordinates for a move to the left
      */
-    getLeftTransform() {
-        const transform: Array<ICoordinate> = [];
+    getLeftTransform(): Array<Coordinate> {
+        const transform: Array<Coordinate> = [];
 
         this.position.forEach(p => {
             transform.push({ x: p.x - 1, y: p.y });
@@ -36,8 +36,8 @@ export default class GamePiece {
     /**
      * Get coordinates for a move to the right
      */
-    getRightTransform() {
-        const transform: Array<ICoordinate> = [];
+    getRightTransform(): Array<Coordinate> {
+        const transform: Array<Coordinate> = [];
 
         this.position.forEach(p => {
             transform.push({ x: p.x + 1, y: p.y });
@@ -49,8 +49,8 @@ export default class GamePiece {
     /**
      * Get coordinates for a move down
      */
-    getDownTransform() {
-        const transform: Array<ICoordinate> = [];
+    getDownTransform(): Array<Coordinate> {
+        const transform: Array<Coordinate> = [];
 
         this.position.forEach(p => {
             transform.push({ x: p.x, y: p.y + 1 });
@@ -63,7 +63,7 @@ export default class GamePiece {
      * Return generatl transform
      * This method is overriden in each GamePiece sub class
      */
-    getTransform() {
+    getTransform(): Array<Coordinate> {
         // Return default transform
         return this.position;
     }

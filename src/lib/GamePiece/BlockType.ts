@@ -1,4 +1,4 @@
-import GamePiece from "../GamePiece";
+import GamePiece from ".";
 
 export default class BlockType extends GamePiece {
     /**

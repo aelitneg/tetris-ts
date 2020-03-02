@@ -1,40 +1,25 @@
-import { GAME_COLS, GAME_ROWS } from "./Config";
+import { GAME_COLS, GAME_ROWS } from "../Config";
+import { GamePieceType, GameState } from "./enum";
 
-import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
-import BlockType from "./GamePieces/BlockType";
-import LineType from "./GamePieces/LineType";
-import ZType from "./GamePieces/ZType";
-import ZInvType from "./GamePieces/ZInvType";
-import TType from "./GamePieces/TType";
-import LType from "./GamePieces/LType";
-import LInvType from "./GamePieces/LInvType";
+import GamePiece from "../GamePiece";
+import BlockType from "../GamePiece/BlockType";
+import LineType from "../GamePiece/LineType";
+import ZType from "../GamePiece/ZType";
+import ZInvType from "../GamePiece/ZInvType";
+import TType from "../GamePiece/TType";
+import LType from "../GamePiece/LType";
+import LInvType from "../GamePiece/LInvType";
 
-import EventBus from "./EventBus";
-
-enum GamePieceType {
-    BLOCK, // eslint-disable-line no-unused-vars
-    LINE, // eslint-disable-line no-unused-vars
-    Z, // eslint-disable-line no-unused-vars
-    Z_INV, // eslint-disable-line no-unused-vars
-    T, // eslint-disable-line no-unused-vars
-    L, // eslint-disable-line no-unused-vars
-    L_INV, // eslint-disable-line no-unused-vars
-}
-
-enum GameState {
-    INIT, // eslint-disable-line no-unused-vars
-    PLAYING, // eslint-disable-line no-unused-vars
-    STOPPED, // eslint-disable-line no-unused-vars
-}
+import EventBus from "../EventBus";
 
 export default class GameEngine {
-    stateMap: boolean[][];
-    eventBus: EventBus;
-    activePiece: GamePiece;
-    gameState: GameState;
-    lineCount: number;
-    level: number;
-    points: number;
+    private stateMap: boolean[][];
+    private eventBus: EventBus;
+    private activePiece: GamePiece;
+    private gameState: GameState;
+    private points: number;
+    private lineCount: number;
+    private level: number;
 
     constructor() {
         this.gameState = GameState.INIT;
@@ -49,12 +34,12 @@ export default class GameEngine {
     /**
      * Initialize the stateMap to bounds
      */
-    initStateMap() {
+    initStateMap(): void {
         this.stateMap = [];
 
-        for (let i: number = 0; i < GAME_ROWS; i++) {
+        for (let i = 0; i < GAME_ROWS; i++) {
             this.stateMap[i] = [];
-            for (let j: number = 0; j < GAME_COLS; j++) {
+            for (let j = 0; j < GAME_COLS; j++) {
                 this.stateMap[i][j] = false;
             }
         }
@@ -63,7 +48,7 @@ export default class GameEngine {
     /**
      * Subscribe to EventBus events and setup handlers
      */
-    subscribeToEvents() {
+    subscribeToEvents(): void {
         this.eventBus.subscribe("PLAY", this.startGame.bind(this));
 
         this.eventBus.subscribe("INPUT_LEFT", this.moveLeft.bind(this));
@@ -78,7 +63,7 @@ export default class GameEngine {
     /**
      * Start the game
      */
-    startGame() {
+    startGame(): void {
         console.log("[tetris-ts GameEngine] Starting Game");
         this.gameState = GameState.PLAYING;
 
@@ -93,7 +78,7 @@ export default class GameEngine {
      * Main loop. Move GamePiece down and generate
      * new ones.
      */
-    run() {
+    run(): void {
         if (this.gameState == GameState.PLAYING) {
             if (
                 this.activePiece &&
@@ -120,7 +105,7 @@ export default class GameEngine {
     /**
      * Generate a new GamePiece
      */
-    generateGamePiece() {
+    generateGamePiece(): void {
         const gamePieceType: GamePieceType = Math.floor(
             Math.random() * Math.floor(7)
         );
@@ -168,7 +153,7 @@ export default class GameEngine {
      * Check if coordinates are already occupied
      * @param gamePiece
      */
-    validateGamePiece(position: Array<ICoordinate>) {
+    validateGamePiece(position: Array<Coordinate>): boolean {
         let isValid = true;
         position.forEach(p => {
             if (this.stateMap[p.y][p.x]) {
@@ -182,12 +167,12 @@ export default class GameEngine {
     /**
      * Check for rows that are complete
      */
-    checkCompleteRows() {
+    checkCompleteRows(): void {
         const completeRows: Array<number> = [];
 
-        for (let i: number = 0; i < GAME_ROWS; i++) {
-            let sum: number = 0;
-            for (let j: number = 0; j < GAME_COLS; j++) {
+        for (let i = 0; i < GAME_ROWS; i++) {
+            let sum = 0;
+            for (let j = 0; j < GAME_COLS; j++) {
                 if (this.stateMap[i][j]) {
                     sum++;
                 }
@@ -202,7 +187,7 @@ export default class GameEngine {
             completeRows.forEach(i => {
                 this.stateMap.splice(i, 1);
                 const row: Array<boolean> = [];
-                for (let i: number = 0; i < GAME_COLS; i++) {
+                for (let i = 0; i < GAME_COLS; i++) {
                     row.push(false);
                 }
                 this.stateMap.unshift(row);
@@ -218,7 +203,7 @@ export default class GameEngine {
      * Add a GamePiece to the stateMap
      * @param gamePiece GamePiece
      */
-    addToStateMap(gamePiece: GamePiece) {
+    addToStateMap(gamePiece: GamePiece): void {
         gamePiece.position.forEach(p => {
             this.stateMap[p.y][p.x] = true;
         });
@@ -228,7 +213,7 @@ export default class GameEngine {
      * Remove a GamePiece from the stateMap
      * @param gamePiece GamePiece
      */
-    removeFromStateMap(gamePiece: GamePiece) {
+    removeFromStateMap(gamePiece: GamePiece): void {
         gamePiece.position.forEach(p => {
             this.stateMap[p.y][p.x] = false;
         });
@@ -237,8 +222,8 @@ export default class GameEngine {
     /**
      * Move activePiece to the left
      */
-    moveLeft() {
-        const transform: Array<ICoordinate> = this.activePiece.getLeftTransform();
+    moveLeft(): void {
+        const transform: Array<Coordinate> = this.activePiece.getLeftTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
             this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
@@ -253,8 +238,8 @@ export default class GameEngine {
     /**
      * Move activePiece to the right
      */
-    moveRight() {
-        const transform: Array<ICoordinate> = this.activePiece.getRightTransform();
+    moveRight(): void {
+        const transform: Array<Coordinate> = this.activePiece.getRightTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
             this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
@@ -269,8 +254,8 @@ export default class GameEngine {
     /**
      * Move activePice down
      */
-    moveDown() {
-        const transform: Array<ICoordinate> = this.activePiece.getDownTransform();
+    moveDown(): void {
+        const transform: Array<Coordinate> = this.activePiece.getDownTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
             this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
@@ -285,8 +270,8 @@ export default class GameEngine {
     /**
      * Transform (rotate) a gamePiece
      */
-    transform() {
-        const transform: Array<ICoordinate> = this.activePiece.getTransform();
+    transform(): void {
+        const transform: Array<Coordinate> = this.activePiece.getTransform();
 
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
@@ -303,8 +288,8 @@ export default class GameEngine {
      * Check if all coordinates in a transform are valid
      * @param transform New position
      */
-    validateTransform(transform: Array<ICoordinate>) {
-        let isValid: boolean = true;
+    validateTransform(transform: Array<Coordinate>): boolean {
+        let isValid = true;
 
         transform.forEach(p => {
             if (!this.validateCoordinateTransform(p)) {
@@ -318,7 +303,7 @@ export default class GameEngine {
      * Check if coordinate is valid according to bounds and game rules
      * @param c Coordinate
      */
-    validateCoordinateTransform(c: ICoordinate) {
+    validateCoordinateTransform(c: Coordinate): boolean {
         try {
             // Check if coordinate is occupied by part of activePiece
             if (this.isActivePiece(c)) {
@@ -345,7 +330,7 @@ export default class GameEngine {
      * Check if a coordinate is part of the activePiece
      * @param c Coordinate
      */
-    isActivePiece(c: ICoordinate) {
+    isActivePiece(c: Coordinate): boolean {
         try {
             this.activePiece.position.forEach(p => {
                 if (c.x == p.x && c.y == p.y) {
@@ -359,7 +344,7 @@ export default class GameEngine {
         }
     }
 
-    calculateRowPoints(rowCount: number) {
+    calculateRowPoints(rowCount: number): void {
         let rowPoints: number;
         switch (rowCount) {
             case 1:

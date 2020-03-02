@@ -1,6 +1,6 @@
 import Tetris from "./lib/index";
 
-export function play(el: Element) {
+export function play(el: Element): void {
     try {
         new Tetris(el);
     } catch (error) {

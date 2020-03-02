@@ -1,20 +1,9 @@
-import GamePiece from "./GamePiece"; // eslint-disable-line no-unused-vars
-
-interface IHandler {
-    event: string;
-    handler: Function;
-    gamePiece?: GamePiece;
-    rows?: Array<number>;
-}
-
 export default class EventBus {
     private static instance: EventBus;
 
-    private handlers: Array<IHandler>;
+    private handlers: Array<Handler>;
 
-    private constructor() {}
-
-    static getInstance() {
+    static getInstance(): EventBus {
         if (!EventBus.instance) {
             EventBus.instance = new EventBus();
             EventBus.instance.handlers = [];
@@ -23,14 +12,14 @@ export default class EventBus {
         return EventBus.instance;
     }
 
-    subscribe(event: string, handler: Function) {
+    subscribe(event: string, handler: Function): void {
         this.handlers.push({
             event: event,
             handler: handler,
         });
     }
 
-    publish(event: string, gamePiece?: GamePiece, rows?: Array<number>) {
+    publish(event: string, gamePiece?: GamePiece, rows?: Array<number>): void {
         this.handlers.forEach(h => {
             if (h.event === event) {
                 h.handler(gamePiece || rows);
