@@ -1,4 +1,4 @@
-import { GAME_COLS, GAME_ROWS } from "../Config";
+import { GAME_COLS, GAME_ROWS } from "../../config";
 import { GamePieceType, GameState } from "./enum";
 
 import GamePiece from "../GamePiece";

@@ -1,5 +1,5 @@
 import EventBus from "../EventBus";
-import { GAME_COLS, GAME_ROWS } from "../Config";
+import { GAME_COLS, GAME_ROWS } from "../../config";
 import "../styles.scss";
 
 export default class UIEngine {

@@ -1,4 +1,4 @@
-import { COLORS, GAME_COLS, GAME_ROWS } from "../Config";
+import { COLORS, GAME_COLS, GAME_ROWS } from "../../config";
 
 export default class GamePieceImpl implements GamePiece {
     position: Array<Coordinate>;
