@@ -16,3 +16,5 @@ export const COLORS: Array<Color> = [
 export const GAME_COLS = 10; // Columns on the Game Board
 
 export const GAME_ROWS = 20; // Rows on the Game Board
+
+export const FRAME_CONST = 60.0988; // Frame Rate

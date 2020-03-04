@@ -1,4 +1,4 @@
-import { GAME_COLS, GAME_ROWS } from "../../config";
+import { FRAME_CONST, GAME_COLS, GAME_ROWS } from "../../config";
 import { GamePieceType, GameState } from "./enum";
 
 import GamePiece from "../GamePiece";
@@ -87,11 +87,13 @@ export default class GameEngine {
                 setTimeout(() => {
                     this.moveDown();
                     this.run();
-                }, 1000 - this.level * 100);
+                }, this.getTimeout());
             } else {
-                this.checkCompleteRows();
-                this.generateGamePiece();
-                this.run();
+                setTimeout(() => {
+                    this.checkCompleteRows();
+                    this.generateGamePiece();
+                    this.run();
+                }, this.getTimeout());
             }
         } else {
             this.activePiece = null;
@@ -99,6 +101,25 @@ export default class GameEngine {
             console.log("POINTS:", this.points);
             console.log("LINES:", this.lineCount);
             console.log("LEVEL:", this.level);
+        }
+    }
+
+    /**
+     * Calculate the timeout between drops
+     */
+    getTimeout(): number {
+        if (this.level < 10) {
+            return ((48 - 5 * this.level) / FRAME_CONST) * 1000;
+        } else if (this.level >= 10 && this.level < 13) {
+            return (5 / FRAME_CONST) * 1000;
+        } else if (this.level >= 13 && this.level < 16) {
+            return (4 / FRAME_CONST) * 1000;
+        } else if (this.level >= 16 && this.level < 19) {
+            return (3 / FRAME_CONST) * 1000;
+        } else if (this.level >= 19 && this.level < 29) {
+            return (2 / FRAME_CONST) * 1000;
+        } else {
+            return (1 / FRAME_CONST) * 1000;
         }
     }
 
