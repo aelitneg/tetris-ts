@@ -260,6 +260,10 @@ export default class GameEngine {
      * Move activePiece to the left
      */
     moveLeft(): void {
+        if (this.gameState != GameState.PLAYING) {
+            return;
+        }
+
         const transform: Array<Coordinate> = this.activePiece.getLeftTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
@@ -280,6 +284,10 @@ export default class GameEngine {
      * Move activePiece to the right
      */
     moveRight(): void {
+        if (this.gameState != GameState.PLAYING) {
+            return;
+        }
+
         const transform: Array<Coordinate> = this.activePiece.getRightTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
@@ -300,6 +308,10 @@ export default class GameEngine {
      * Move activePice down
      */
     moveDown(): void {
+        if (this.gameState != GameState.PLAYING) {
+            return;
+        }
+
         const transform: Array<Coordinate> = this.activePiece.getDownTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
@@ -329,6 +341,10 @@ export default class GameEngine {
      * Transform (rotate) a gamePiece
      */
     transform(): void {
+        if (this.gameState != GameState.PLAYING) {
+            return;
+        }
+
         const transform: Array<Coordinate> = this.activePiece.getTransform();
 
         if (this.validateTransform(transform)) {
