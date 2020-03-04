@@ -25,4 +25,5 @@ declare interface GamePiece {
     cols: number;
     rows: number;
     color: Color;
+    locking: boolean;
 }

@@ -84,19 +84,35 @@ export default class GameEngine {
                 this.activePiece &&
                 this.validateTransform(this.activePiece.getDownTransform())
             ) {
+                this.moveDown();
+
                 setTimeout(() => {
-                    this.moveDown();
                     this.run();
                 }, this.getTimeout());
-            } else {
+            } else if (this.activePiece) {
+                this.activePiece.locking = true;
+
                 setTimeout(() => {
-                    this.checkCompleteRows();
-                    this.generateGamePiece();
+                    if (this.activePiece.locking) {
+                        this.activePiece = null;
+                        this.checkCompleteRows();
+                        this.generateGamePiece();
+                    }
+
+                    setTimeout(() => {
+                        this.run();
+                    }, this.getTimeout());
+                }, this.getTimeout());
+            } else {
+                this.generateGamePiece();
+
+                setTimeout(() => {
                     this.run();
                 }, this.getTimeout());
             }
         } else {
             this.activePiece = null;
+
             console.log("GAME OVER");
             console.log("POINTS:", this.points);
             console.log("LINES:", this.lineCount);
@@ -253,6 +269,10 @@ export default class GameEngine {
 
             this.addToStateMap(this.activePiece);
             this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+
+            if (this.activePiece.locking) {
+                this.lockCheck();
+            }
         }
     }
 
@@ -269,6 +289,10 @@ export default class GameEngine {
 
             this.addToStateMap(this.activePiece);
             this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+
+            if (this.activePiece.locking) {
+                this.lockCheck();
+            }
         }
     }
 
@@ -285,6 +309,19 @@ export default class GameEngine {
 
             this.addToStateMap(this.activePiece);
             this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+
+            if (this.activePiece.locking) {
+                this.lockCheck();
+            }
+        }
+    }
+
+    /**
+     * Check if a transform removes lock for piece
+     */
+    lockCheck(): void {
+        if (this.validateTransform(this.activePiece.getDownTransform())) {
+            this.activePiece.locking = false;
         }
     }
 

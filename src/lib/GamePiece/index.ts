@@ -6,6 +6,7 @@ export default class GamePieceImpl implements GamePiece {
     cols: number;
     rows: number;
     color: Color;
+    locking: boolean;
     constructor() {
         this.cols = GAME_COLS;
         this.rows = GAME_ROWS;
