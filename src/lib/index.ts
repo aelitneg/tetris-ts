@@ -17,16 +17,6 @@ export default class Tetris {
         this.gameEngine = new GameEngine();
         this.uiEngine = new UIEngine(rootElement);
 
-        this.setupEventHandlers();
-
         this.eventBus.publish("INIT");
-    }
-
-    setupEventHandlers(): void {
-        this.eventBus.subscribe("UI_READY", this.play.bind(this));
-    }
-
-    play(): void {
-        this.eventBus.publish("PLAY");
     }
 }

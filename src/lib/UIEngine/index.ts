@@ -29,13 +29,24 @@ export default class UIEngine {
     initUI(): void {
         this.createMainContainer();
 
+        this.createMainPanel();
+
+        this.eventBus.publish("UI_READY");
+    }
+
+    /**
+     * Hide main panel and show gameboard
+     */
+    initGameBoard(): void {
+        this.uiElements.container.removeChild(this.uiElements.mainPanel);
+
         this.createGamePanel();
 
         this.createGameBoard();
 
         this.createGameBoardSpaces();
 
-        this.eventBus.publish("UI_READY");
+        this.eventBus.publish("PLAY");
     }
 
     /**
@@ -66,11 +77,19 @@ export default class UIEngine {
     setupEventHandlers(): void {
         this.eventBus.subscribe("INIT", this.initUI.bind(this));
 
+        this.eventBus.subscribe("PLAY_CLICK", this.initGameBoard.bind(this));
+
         this.eventBus.subscribe("DRAW_ACTIVE", this.drawGamePiece.bind(this));
 
         this.eventBus.subscribe("ERASE_ACTIVE", this.eraseGamePiece.bind(this));
 
         this.eventBus.subscribe("REMOVE_ROWS", this.completeRow.bind(this));
+
+        this.eventBus.subscribe("UPDATE_POINTS", this.updatePoints.bind(this));
+
+        this.eventBus.subscribe("UPDATE_LINES", this.updateLines.bind(this));
+
+        this.eventBus.subscribe("UPDATE_LEVEL", this.updateLevel.bind(this));
     }
 
     /**
@@ -97,6 +116,79 @@ export default class UIEngine {
     }
 
     /**
+     * Create Main Panel
+     */
+    createMainPanel(): void {
+        const mainPanel = document.createElement("div");
+        mainPanel.classList.add("panel");
+        mainPanel.classList.add("main-panel");
+
+        const title = document.createElement("div");
+        title.classList.add("text-center");
+        title.innerHTML = "<h3>TETRIS-TS</h3>";
+        mainPanel.appendChild(title);
+
+        const controls = document.createElement("div");
+        controls.classList.add("controls");
+
+        const controlsTitle = document.createElement("div");
+        controlsTitle.innerHTML = "CONTROLS";
+        controlsTitle.classList.add("label");
+        controls.appendChild(controlsTitle);
+
+        this.uiElements.controls = controls;
+        this.createControlTable();
+        mainPanel.appendChild(controls);
+
+        const playButton = document.createElement("div");
+        playButton.classList.add("text-center");
+        playButton.innerHTML = "<div class='button'>PLAY</div>";
+        this.uiElements.playButton = playButton;
+
+        playButton.onclick = (): void => {
+            this.eventBus.publish("PLAY_CLICK");
+        };
+
+        mainPanel.appendChild(playButton);
+
+        this.uiElements.mainPanel = mainPanel;
+        this.uiElements.container.appendChild(this.uiElements.mainPanel);
+    }
+
+    createControlTable(): void {
+        interface Control {
+            name: string;
+            desc: string;
+        }
+
+        const controls = [
+            { name: "LEFT ARROW", desc: "MOVE LEFT" },
+            { name: "RIGHT ARROW", desc: "MOVE RIGHT" },
+            { name: "DOWN ARROW", desc: "MOVE DOWN" },
+            { name: "UP ARROW", desc: "ROTATE" },
+        ];
+
+        const controlTable = document.createElement("table");
+        controlTable.classList.add("control-table");
+
+        controls.forEach((control: Control) => {
+            const controlRow = document.createElement("tr");
+
+            const controlName = document.createElement("td");
+            controlName.innerHTML = control.name;
+            controlRow.appendChild(controlName);
+
+            const controlDesc = document.createElement("td");
+            controlDesc.innerHTML = control.desc;
+            controlRow.appendChild(controlDesc);
+
+            controlTable.appendChild(controlRow);
+        });
+
+        this.uiElements.controls.appendChild(controlTable);
+    }
+
+    /**
      * Create Container for Game Board
      */
     createGamePanel(): void {
@@ -106,6 +198,8 @@ export default class UIEngine {
 
         this.uiElements.gamePanel = gamePanel;
         this.uiElements.container.appendChild(this.uiElements.gamePanel);
+
+        this.createStatsPanel();
     }
 
     /**
@@ -138,6 +232,46 @@ export default class UIEngine {
 
             this.uiElements.gameBoard.appendChild(row);
         }
+    }
+
+    /**
+     * Create stats panel
+     */
+    createStatsPanel(): void {
+        const statsPanel = document.createElement("div");
+        statsPanel.classList.add("stats-panel");
+
+        const pointsLabel = document.createElement("div");
+        pointsLabel.classList.add("stats-label");
+        pointsLabel.innerHTML = "POINTS";
+        statsPanel.appendChild(pointsLabel);
+
+        const pointsValue = document.createElement("div");
+        pointsValue.classList.add("stats-value");
+        this.uiElements.points = pointsValue;
+        statsPanel.appendChild(pointsValue);
+
+        const linesLabel = document.createElement("div");
+        linesLabel.classList.add("stats-label");
+        linesLabel.innerHTML = "LINES";
+        statsPanel.appendChild(linesLabel);
+
+        const linesValue = document.createElement("div");
+        linesValue.classList.add("stats-value");
+        this.uiElements.lines = linesValue;
+        statsPanel.appendChild(linesValue);
+
+        const levelLabel = document.createElement("div");
+        levelLabel.classList.add("stats-label");
+        levelLabel.innerHTML = "LEVEL";
+        statsPanel.appendChild(levelLabel);
+
+        const levelValue = document.createElement("div");
+        levelValue.classList.add("stats-value");
+        this.uiElements.level = levelValue;
+        statsPanel.appendChild(levelValue);
+
+        this.uiElements.container.appendChild(statsPanel);
     }
 
     /**
@@ -192,5 +326,17 @@ export default class UIEngine {
             row,
             this.uiElements.gameBoard.children[0]
         );
+    }
+
+    updatePoints(points: number): void {
+        this.uiElements.points.innerHTML = points.toString();
+    }
+
+    updateLines(lines: number): void {
+        this.uiElements.lines.innerHTML = lines.toString();
+    }
+
+    updateLevel(level: number): void {
+        this.uiElements.level.innerHTML = level.toString();
     }
 }

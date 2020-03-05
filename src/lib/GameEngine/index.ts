@@ -68,8 +68,13 @@ export default class GameEngine {
         this.gameState = GameState.PLAYING;
 
         this.points = 0;
+        this.eventBus.publish("UPDATE_POINTS", null, null, 0);
+
         this.lineCount = 0;
+        this.eventBus.publish("UPDATE_LINES", null, null, 0);
+
         this.level = 0;
+        this.eventBus.publish("UPDATE_LEVEL", null, null, 0);
 
         this.run();
     }
@@ -436,11 +441,14 @@ export default class GameEngine {
         }
 
         this.points += rowPoints * (this.level + 1);
+        this.eventBus.publish("UPDATE_POINTS", null, null, this.points);
 
         this.lineCount = this.lineCount + rowCount;
+        this.eventBus.publish("UPDATE_LINES", null, null, this.lineCount);
 
         if (this.lineCount >= (this.level + 1) * 10) {
             this.level++;
+            this.eventBus.publish("UPDATE_LEVEL", null, null, this.level);
         }
     }
 }

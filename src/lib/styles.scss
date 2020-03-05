@@ -3,6 +3,50 @@
     flex: 1;
     height: 100%;
     background-color: black;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.main-panel {
+    width: 100%;
+}
+
+.controls {
+    padding: 15px;
+}
+
+.control-table {
+    width: 100%;
+    font-size: 0.75em;
+    border: 1px solid blue;
+    padding: 5px;
+
+    td {
+        text-align: center;
+    }
+}
+
+.label {
+    font-weight: bold;
+    font-size: 0.85em;
+    padding: 5px 0px;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.button {
+    display: inline-block;
+    background-color: black;
+    border: 1px solid blue;
+    padding: 5px;
+    margin: 5px;
+}
+
+.button:hover {
+    background-color: blue;
+}
+
+.text-center {
+    text-align: center;
 }
 
 .game-panel {
@@ -15,7 +59,7 @@
     flex: 1;
     align-self: flex-end;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 15px;
+    margin: 15px 0px 15px 15px;
 }
 
 .game-row {
@@ -31,4 +75,19 @@
 .game-piece {
     border-width: 1px;
     border-style: solid;
+}
+
+.stats-panel {
+    padding: 15px;
+    text-align: center;
+}
+
+.stats-label {
+    font-size: 0.75em;
+    text-decoration: underline;
+}
+
+.stats-value {
+    font-size: 0.75em;
+    margin-bottom: 5px;
 }
