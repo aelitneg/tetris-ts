@@ -19,10 +19,15 @@ export default class EventBus {
         });
     }
 
-    publish(event: string, gamePiece?: GamePiece, rows?: Array<number>): void {
+    publish(
+        event: string,
+        gamePiece?: GamePiece,
+        rows?: Array<number>,
+        value?: number
+    ): void {
         this.handlers.forEach(h => {
             if (h.event === event) {
-                h.handler(gamePiece || rows);
+                h.handler(gamePiece || rows || value);
             }
         });
     }

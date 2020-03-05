@@ -17,6 +17,7 @@ declare interface Handler {
     handler: Function;
     gamePiece?: GamePiece;
     rows?: Array<number>;
+    value?: number;
 }
 
 declare interface GamePiece {
