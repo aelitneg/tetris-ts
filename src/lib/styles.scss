@@ -39,6 +39,7 @@
     border: 1px solid blue;
     padding: 5px;
     margin: 5px;
+    cursor: pointer;
 }
 
 .button:hover {
@@ -90,4 +91,8 @@
 .stats-value {
     font-size: 0.75em;
     margin-bottom: 5px;
+}
+
+.paused {
+    opacity: 0.5;
 }

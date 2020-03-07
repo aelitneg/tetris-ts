@@ -1,3 +1,4 @@
+import { GameState } from "../enum";
 import EventBus from "../EventBus";
 import { GAME_COLS, GAME_ROWS } from "../../config";
 import "../styles.scss";
@@ -7,6 +8,7 @@ export default class UIEngine {
 
     rootElement: Element;
     uiElements: { [key: string]: Element };
+    gameState: GameState;
 
     constructor(rootElement: Element) {
         console.log(
@@ -21,6 +23,7 @@ export default class UIEngine {
 
         this.createInputListeners();
         this.setupEventHandlers();
+        this.gameState = GameState.INIT;
     }
 
     /**
@@ -67,6 +70,8 @@ export default class UIEngine {
                 case "ArrowUp":
                     this.eventBus.publish("INPUT_UP");
                     break;
+                case "Space":
+                    this.eventBus.publish("INPUT_SPACE");
             }
         });
     }
@@ -77,7 +82,7 @@ export default class UIEngine {
     setupEventHandlers(): void {
         this.eventBus.subscribe("INIT", this.initUI.bind(this));
 
-        this.eventBus.subscribe("PLAY_CLICK", this.initGameBoard.bind(this));
+        this.eventBus.subscribe("PLAY_CLICK", this.playClickHandler.bind(this));
 
         this.eventBus.subscribe("DRAW_ACTIVE", this.drawGamePiece.bind(this));
 
@@ -90,6 +95,29 @@ export default class UIEngine {
         this.eventBus.subscribe("UPDATE_LINES", this.updateLines.bind(this));
 
         this.eventBus.subscribe("UPDATE_LEVEL", this.updateLevel.bind(this));
+
+        this.eventBus.subscribe(
+            "INPUT_SPACE",
+            this.inputSpaceHandler.bind(this)
+        );
+    }
+
+    playClickHandler(): void {
+        this.gameState = GameState.PLAYING;
+        this.initGameBoard();
+    }
+
+    inputSpaceHandler(): void {
+        switch (this.gameState) {
+            case GameState.PLAYING:
+                this.togglePause();
+                this.gameState = GameState.PAUSED;
+                break;
+            case GameState.PAUSED:
+                this.togglePause();
+                this.gameState = GameState.PLAYING;
+                break;
+        }
     }
 
     /**
@@ -338,5 +366,13 @@ export default class UIEngine {
 
     updateLevel(level: number): void {
         this.uiElements.level.innerHTML = level.toString();
+    }
+
+    togglePause(): void {
+        if (this.gameState === GameState.PLAYING) {
+            this.uiElements.container.classList.add("paused");
+        } else {
+            this.uiElements.container.classList.remove("paused");
+        }
     }
 }

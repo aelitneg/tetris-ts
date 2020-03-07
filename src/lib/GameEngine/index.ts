@@ -1,5 +1,5 @@
 import { FRAME_CONST, GAME_COLS, GAME_ROWS } from "../../config";
-import { GamePieceType, GameState } from "./enum";
+import { GamePieceType, GameState } from "../enum";
 
 import GamePiece from "../GamePiece";
 import BlockType from "../GamePiece/BlockType";
@@ -58,6 +58,8 @@ export default class GameEngine {
         this.eventBus.subscribe("INPUT_DOWN", this.moveDown.bind(this));
 
         this.eventBus.subscribe("INPUT_UP", this.transform.bind(this));
+
+        this.eventBus.subscribe("INPUT_SPACE", this.togglePauseGame.bind(this));
     }
 
     /**
@@ -77,6 +79,15 @@ export default class GameEngine {
         this.eventBus.publish("UPDATE_LEVEL", null, null, 0);
 
         this.run();
+    }
+
+    togglePauseGame(): void {
+        if (this.gameState === GameState.PLAYING) {
+            this.gameState = GameState.PAUSED;
+        } else if (this.gameState === GameState.PAUSED) {
+            this.gameState = GameState.PLAYING;
+            this.run();
+        }
     }
 
     /**
@@ -115,7 +126,7 @@ export default class GameEngine {
                     this.run();
                 }, this.getTimeout());
             }
-        } else {
+        } else if (this.gameState !== GameState.PAUSED) {
             this.activePiece = null;
 
             console.log("GAME OVER");
