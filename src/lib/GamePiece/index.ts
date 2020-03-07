@@ -1,71 +1,34 @@
-import { COLORS, GAME_COLS, GAME_ROWS } from "../../config";
+import { GamePieceType } from "../enum";
 
-export default class GamePieceImpl implements GamePiece {
-    position: Array<Coordinate>;
-    xOffset: number;
-    cols: number;
-    rows: number;
-    color: Color;
-    locking: boolean;
-    constructor() {
-        this.cols = GAME_COLS;
-        this.rows = GAME_ROWS;
+import BlockType from "./BlockType";
+import LineType from "./LineType";
+import ZType from "./ZType";
+import ZInvType from "./ZInvType";
+import TType from "./TType";
+import LType from "./LType";
+import LInvType from "./LInvType";
 
-        // Place piece in the middle of the Game Board
-        this.xOffset =
-            ((GAME_COLS / 2) % 2
-                ? GAME_COLS / 2
-                : GAME_COLS / 2 - (GAME_COLS % 2)) - 1;
+export const newGamePiece = function(): GamePiece {
+    const gamePieceType: GamePieceType = Math.floor(
+        Math.random() * Math.floor(7)
+    );
 
-        this.color =
-            COLORS[Math.floor(Math.random() * Math.floor(COLORS.length))];
+    switch (gamePieceType as GamePieceType) {
+        case GamePieceType.BLOCK:
+            return new BlockType();
+        case GamePieceType.LINE:
+            return new LineType();
+        case GamePieceType.Z:
+            return new ZType();
+        case GamePieceType.Z_INV:
+            return new ZInvType();
+        case GamePieceType.T:
+            return new TType();
+        case GamePieceType.L:
+            return new LType();
+        case GamePieceType.L_INV:
+            return new LInvType();
+        default:
+            throw Error(`[tetris-ts] Invalid GamePieceType '${gamePieceType}'`);
     }
-
-    /**
-     * Get coordinates for a move to the left
-     */
-    getLeftTransform(): Array<Coordinate> {
-        const transform: Array<Coordinate> = [];
-
-        this.position.forEach(p => {
-            transform.push({ x: p.x - 1, y: p.y });
-        });
-
-        return transform;
-    }
-
-    /**
-     * Get coordinates for a move to the right
-     */
-    getRightTransform(): Array<Coordinate> {
-        const transform: Array<Coordinate> = [];
-
-        this.position.forEach(p => {
-            transform.push({ x: p.x + 1, y: p.y });
-        });
-
-        return transform;
-    }
-
-    /**
-     * Get coordinates for a move down
-     */
-    getDownTransform(): Array<Coordinate> {
-        const transform: Array<Coordinate> = [];
-
-        this.position.forEach(p => {
-            transform.push({ x: p.x, y: p.y + 1 });
-        });
-
-        return transform;
-    }
-
-    /**
-     * Return generatl transform
-     * This method is overriden in each GamePiece sub class
-     */
-    getTransform(): Array<Coordinate> {
-        // Return default transform
-        return this.position;
-    }
-}
+};

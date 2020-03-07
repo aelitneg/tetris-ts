@@ -1,4 +1,4 @@
-import GamePiece from ".";
+import GamePiece from "./GamePiece";
 
 export default class ZType extends GamePiece {
     /**

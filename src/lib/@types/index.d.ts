@@ -27,4 +27,8 @@ declare interface GamePiece {
     rows: number;
     color: Color;
     locking: boolean;
+    getLeftTransform: Function;
+    getRightTransform: Function;
+    getDownTransform: Function;
+    getTransform: Function;
 }

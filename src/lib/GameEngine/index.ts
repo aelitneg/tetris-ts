@@ -1,14 +1,7 @@
 import { FRAME_CONST, GAME_COLS, GAME_ROWS } from "../../config";
-import { GamePieceType, GameState } from "../enum";
+import { GameState } from "../enum";
 
-import GamePiece from "../GamePiece";
-import BlockType from "../GamePiece/BlockType";
-import LineType from "../GamePiece/LineType";
-import ZType from "../GamePiece/ZType";
-import ZInvType from "../GamePiece/ZInvType";
-import TType from "../GamePiece/TType";
-import LType from "../GamePiece/LType";
-import LInvType from "../GamePiece/LInvType";
+import { newGamePiece } from "../GamePiece";
 
 import EventBus from "../EventBus";
 
@@ -159,39 +152,7 @@ export default class GameEngine {
      * Generate a new GamePiece
      */
     generateGamePiece(): void {
-        const gamePieceType: GamePieceType = Math.floor(
-            Math.random() * Math.floor(7)
-        );
-
-        let gamePiece: GamePiece;
-
-        switch (gamePieceType as GamePieceType) {
-            case GamePieceType.BLOCK:
-                gamePiece = new BlockType();
-                break;
-            case GamePieceType.LINE:
-                gamePiece = new LineType();
-                break;
-            case GamePieceType.Z:
-                gamePiece = new ZType();
-                break;
-            case GamePieceType.Z_INV:
-                gamePiece = new ZInvType();
-                break;
-            case GamePieceType.T:
-                gamePiece = new TType();
-                break;
-            case GamePieceType.L:
-                gamePiece = new LType();
-                break;
-            case GamePieceType.L_INV:
-                gamePiece = new LInvType();
-                break;
-            default:
-                throw Error(
-                    `[tetris-ts] Invalid GamePieceType '${gamePieceType}'`
-                );
-        }
+        const gamePiece: GamePiece = newGamePiece();
 
         if (!this.validateGamePiece(gamePiece.position)) {
             this.gameState = GameState.STOPPED;
