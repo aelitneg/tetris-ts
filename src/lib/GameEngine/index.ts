@@ -1,14 +1,15 @@
 import { FRAME_CONST, GAME_COLS, GAME_ROWS } from "../../config";
 import { GameState } from "../enum";
+import GamePiece from "../GamePiece/GamePiece";
+import { Coordinate, newGamePiece } from "../GamePiece";
 
-import { newGamePiece } from "../GamePiece";
-
-import EventBus from "../EventBus";
+import { EventBus } from "../EventBus";
 
 export default class GameEngine {
     private stateMap: boolean[][];
     private eventBus: EventBus;
     private activePiece: GamePiece;
+    private nextPiece: GamePiece;
     private gameState: GameState;
     private points: number;
     private lineCount: number;
@@ -42,17 +43,29 @@ export default class GameEngine {
      * Subscribe to EventBus events and setup handlers
      */
     subscribeToEvents(): void {
-        this.eventBus.subscribe("PLAY", this.startGame.bind(this));
+        this.eventBus.subscribe("PLAY", () => {
+            this.startGame();
+        });
 
-        this.eventBus.subscribe("INPUT_LEFT", this.moveLeft.bind(this));
+        this.eventBus.subscribe("INPUT_LEFT", () => {
+            this.moveLeft();
+        });
 
-        this.eventBus.subscribe("INPUT_RIGHT", this.moveRight.bind(this));
+        this.eventBus.subscribe("INPUT_RIGHT", () => {
+            this.moveRight();
+        });
 
-        this.eventBus.subscribe("INPUT_DOWN", this.moveDown.bind(this));
+        this.eventBus.subscribe("INPUT_DOWN", () => {
+            this.moveDown();
+        });
 
-        this.eventBus.subscribe("INPUT_UP", this.transform.bind(this));
+        this.eventBus.subscribe("INPUT_UP", () => {
+            this.transform();
+        });
 
-        this.eventBus.subscribe("INPUT_SPACE", this.togglePauseGame.bind(this));
+        this.eventBus.subscribe("INPUT_SPACE", () => {
+            this.togglePauseGame();
+        });
     }
 
     /**
@@ -63,13 +76,22 @@ export default class GameEngine {
         this.gameState = GameState.PLAYING;
 
         this.points = 0;
-        this.eventBus.publish("UPDATE_POINTS", null, null, 0);
+        this.eventBus.publishStatsEvent({
+            event: "UPDATE_POINTS",
+            value: this.points,
+        });
 
         this.lineCount = 0;
-        this.eventBus.publish("UPDATE_LINES", null, null, 0);
+        this.eventBus.publishStatsEvent({
+            event: "UPDATE_LINES",
+            value: this.lineCount,
+        });
 
         this.level = 0;
-        this.eventBus.publish("UPDATE_LEVEL", null, null, 0);
+        this.eventBus.publishStatsEvent({
+            event: "UPDATE_LEVEL",
+            value: this.level,
+        });
 
         this.run();
     }
@@ -152,15 +174,26 @@ export default class GameEngine {
      * Generate a new GamePiece
      */
     generateGamePiece(): void {
-        const gamePiece: GamePiece = newGamePiece();
+        if (!this.nextPiece) {
+            this.nextPiece = newGamePiece();
+        }
 
-        if (!this.validateGamePiece(gamePiece.position)) {
+        if (!this.validateGamePiece(this.nextPiece.position)) {
             this.gameState = GameState.STOPPED;
         }
 
-        this.activePiece = gamePiece;
+        this.activePiece = this.nextPiece;
         this.addToStateMap(this.activePiece);
-        this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+        this.eventBus.publishGamePieceEvent({
+            event: "DRAW_ACTIVE",
+            gamePiece: this.activePiece,
+        });
+
+        this.nextPiece = newGamePiece();
+        this.eventBus.publishGamePieceEvent({
+            event: "DRAW_NEXT",
+            gamePiece: this.nextPiece,
+        });
     }
 
     /**
@@ -209,7 +242,10 @@ export default class GameEngine {
 
             this.calculateRowPoints(completeRows.length);
 
-            this.eventBus.publish("REMOVE_ROWS", null, completeRows);
+            this.eventBus.publishRowEvent({
+                event: "REMOVE_ROWS",
+                rows: completeRows,
+            });
         }
     }
 
@@ -244,12 +280,18 @@ export default class GameEngine {
         const transform: Array<Coordinate> = this.activePiece.getLeftTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
-            this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "ERASE_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             this.activePiece.position = transform;
 
             this.addToStateMap(this.activePiece);
-            this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "DRAW_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             if (this.activePiece.locking) {
                 this.lockCheck();
@@ -268,12 +310,18 @@ export default class GameEngine {
         const transform: Array<Coordinate> = this.activePiece.getRightTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
-            this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "ERASE_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             this.activePiece.position = transform;
 
             this.addToStateMap(this.activePiece);
-            this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "DRAW_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             if (this.activePiece.locking) {
                 this.lockCheck();
@@ -292,12 +340,18 @@ export default class GameEngine {
         const transform: Array<Coordinate> = this.activePiece.getDownTransform();
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
-            this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "ERASE_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             this.activePiece.position = transform;
 
             this.addToStateMap(this.activePiece);
-            this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "DRAW_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             if (this.activePiece.locking) {
                 this.lockCheck();
@@ -326,12 +380,18 @@ export default class GameEngine {
 
         if (this.validateTransform(transform)) {
             this.removeFromStateMap(this.activePiece);
-            this.eventBus.publish("ERASE_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "ERASE_ACTIVE",
+                gamePiece: this.activePiece,
+            });
 
             this.activePiece.position = transform;
 
             this.addToStateMap(this.activePiece);
-            this.eventBus.publish("DRAW_ACTIVE", this.activePiece);
+            this.eventBus.publishGamePieceEvent({
+                event: "DRAW_ACTIVE",
+                gamePiece: this.activePiece,
+            });
         }
     }
 
@@ -413,14 +473,23 @@ export default class GameEngine {
         }
 
         this.points += rowPoints * (this.level + 1);
-        this.eventBus.publish("UPDATE_POINTS", null, null, this.points);
+        this.eventBus.publishStatsEvent({
+            event: "UPDATE_POINTS",
+            value: this.points,
+        });
 
         this.lineCount = this.lineCount + rowCount;
-        this.eventBus.publish("UPDATE_LINES", null, null, this.lineCount);
+        this.eventBus.publishStatsEvent({
+            event: "UPDATE_LINES",
+            value: this.lineCount,
+        });
 
         if (this.lineCount >= (this.level + 1) * 10) {
             this.level++;
-            this.eventBus.publish("UPDATE_LEVEL", null, null, this.level);
+            this.eventBus.publishStatsEvent({
+                event: "UPDATE_LEVEL",
+                value: this.level,
+            });
         }
     }
 }

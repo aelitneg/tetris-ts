@@ -1,5 +1,4 @@
-import { GamePieceType } from "../enum";
-
+import GamePiece from "./GamePiece";
 import BlockType from "./BlockType";
 import LineType from "./LineType";
 import ZType from "./ZType";
@@ -7,6 +6,26 @@ import ZInvType from "./ZInvType";
 import TType from "./TType";
 import LType from "./LType";
 import LInvType from "./LInvType";
+
+export enum GamePieceType {
+    BLOCK,
+    LINE,
+    Z,
+    Z_INV,
+    T,
+    L,
+    L_INV,
+}
+
+export interface Color {
+    color: string;
+    border: string;
+}
+
+export interface Coordinate {
+    x: number;
+    y: number;
+}
 
 export const newGamePiece = function(): GamePiece {
     const gamePieceType: GamePieceType = Math.floor(

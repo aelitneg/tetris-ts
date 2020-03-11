@@ -1,4 +1,5 @@
 import GamePiece from "./GamePiece";
+import { Coordinate, GamePieceType } from ".";
 
 export default class LineType extends GamePiece {
     /**
@@ -6,7 +7,7 @@ export default class LineType extends GamePiece {
      * 0 1 2 3
      */
     constructor() {
-        super();
+        super(GamePieceType.LINE);
 
         this.position = [
             { x: this.xOffset - 1, y: 0 },

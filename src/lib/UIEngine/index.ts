@@ -1,7 +1,10 @@
+import GamePiece from "../GamePiece/GamePiece";
+import { Color, Coordinate, GamePieceType } from "../GamePiece";
 import { GameState } from "../enum";
-import EventBus from "../EventBus";
+import { EventBus, GamePieceEvent, RowEvent, StatsEvent } from "../EventBus";
 import { GAME_COLS, GAME_ROWS } from "../../config";
 import "../styles.scss";
+import { clearLine } from "readline";
 
 export default class UIEngine {
     eventBus: EventBus;
@@ -34,7 +37,7 @@ export default class UIEngine {
 
         this.createMainPanel();
 
-        this.eventBus.publish("UI_READY");
+        this.eventBus.publish({ event: "UI_READY" });
     }
 
     /**
@@ -49,7 +52,7 @@ export default class UIEngine {
 
         this.createGameBoardSpaces();
 
-        this.eventBus.publish("PLAY");
+        this.eventBus.publish({ event: "PLAY" });
     }
 
     /**
@@ -59,19 +62,19 @@ export default class UIEngine {
         document.addEventListener("keydown", e => {
             switch (e.code) {
                 case "ArrowLeft":
-                    this.eventBus.publish("INPUT_LEFT");
+                    this.eventBus.publish({ event: "INPUT_LEFT" });
                     break;
                 case "ArrowRight":
-                    this.eventBus.publish("INPUT_RIGHT");
+                    this.eventBus.publish({ event: "INPUT_RIGHT" });
                     break;
                 case "ArrowDown":
-                    this.eventBus.publish("INPUT_DOWN");
+                    this.eventBus.publish({ event: "INPUT_DOWN" });
                     break;
                 case "ArrowUp":
-                    this.eventBus.publish("INPUT_UP");
+                    this.eventBus.publish({ event: "INPUT_UP" });
                     break;
                 case "Space":
-                    this.eventBus.publish("INPUT_SPACE");
+                    this.eventBus.publish({ event: "INPUT_SPACE" });
             }
         });
     }
@@ -80,21 +83,41 @@ export default class UIEngine {
      * Setup Event Handlers for EventBus Events
      */
     setupEventHandlers(): void {
-        this.eventBus.subscribe("INIT", this.initUI.bind(this));
+        this.eventBus.subscribe("INIT", () => {
+            this.initUI();
+        });
 
-        this.eventBus.subscribe("PLAY_CLICK", this.playClickHandler.bind(this));
+        this.eventBus.subscribe("PLAY_CLICK", () => {
+            this.playClickHandler();
+        });
 
-        this.eventBus.subscribe("DRAW_ACTIVE", this.drawGamePiece.bind(this));
+        this.eventBus.subscribe("DRAW_ACTIVE", (event: GamePieceEvent) => {
+            this.drawGamePiece(event.gamePiece);
+        });
 
-        this.eventBus.subscribe("ERASE_ACTIVE", this.eraseGamePiece.bind(this));
+        this.eventBus.subscribe("ERASE_ACTIVE", (event: GamePieceEvent) => {
+            this.eraseGamePiece(event.gamePiece);
+        });
 
-        this.eventBus.subscribe("REMOVE_ROWS", this.completeRow.bind(this));
+        this.eventBus.subscribe("REMOVE_ROWS", (event: RowEvent) => {
+            this.completeRow(event.rows);
+        });
 
-        this.eventBus.subscribe("UPDATE_POINTS", this.updatePoints.bind(this));
+        this.eventBus.subscribe("UPDATE_POINTS", (event: StatsEvent) => {
+            this.updatePoints(event.value);
+        });
 
-        this.eventBus.subscribe("UPDATE_LINES", this.updateLines.bind(this));
+        this.eventBus.subscribe("UPDATE_LINES", (event: StatsEvent) => {
+            this.updateLines(event.value);
+        });
 
-        this.eventBus.subscribe("UPDATE_LEVEL", this.updateLevel.bind(this));
+        this.eventBus.subscribe("UPDATE_LEVEL", (event: StatsEvent) => {
+            this.updateLevel(event.value);
+        });
+
+        this.eventBus.subscribe("DRAW_NEXT", (event: GamePieceEvent) => {
+            this.drawNextPiece(event.gamePiece);
+        });
 
         this.eventBus.subscribe(
             "INPUT_SPACE",
@@ -174,7 +197,7 @@ export default class UIEngine {
         this.uiElements.playButton = playButton;
 
         playButton.onclick = (): void => {
-            this.eventBus.publish("PLAY_CLICK");
+            this.eventBus.publish({ event: "PLAY_CLICK" });
         };
 
         mainPanel.appendChild(playButton);
@@ -299,7 +322,159 @@ export default class UIEngine {
         this.uiElements.level = levelValue;
         statsPanel.appendChild(levelValue);
 
+        this.uiElements.statsPanel = statsPanel;
         this.uiElements.container.appendChild(statsPanel);
+
+        this.createNextPieceContainer();
+    }
+
+    createNextPieceContainer(): void {
+        const square = this.uiElements.statsPanel.clientWidth - 30;
+
+        const nextPieceContainer = document.createElement("div");
+        nextPieceContainer.classList.add("next-piece-container");
+        nextPieceContainer.setAttribute("style", `height: ${square}px;`);
+
+        this.uiElements.nextPieceContainer = nextPieceContainer;
+        this.uiElements.statsPanel.appendChild(nextPieceContainer);
+    }
+
+    drawNextPiece(gamePiece: GamePiece): void {
+        if (this.uiElements.nextPiece) {
+            this.uiElements.nextPieceContainer.removeChild(
+                this.uiElements.nextPiece
+            );
+        }
+
+        const nextPiece = document.createElement("div");
+        nextPiece.classList.add("next-piece");
+        this.uiElements.nextPiece = nextPiece;
+
+        switch (gamePiece.type) {
+            case GamePieceType.BLOCK:
+                this.createNextPieceSpaces(2, 2);
+                this.setNextPieceActive(
+                    [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 0, y: 1 },
+                        { x: 1, y: 1 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+            case GamePieceType.LINE:
+                this.createNextPieceSpaces(1, 4);
+                this.setNextPieceActive(
+                    [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 3, y: 0 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+            case GamePieceType.T:
+                this.createNextPieceSpaces(2, 3);
+                this.setNextPieceActive(
+                    [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 1, y: 1 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+            case GamePieceType.L:
+                this.createNextPieceSpaces(2, 3);
+                this.setNextPieceActive(
+                    [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 0, y: 1 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+            case GamePieceType.L_INV:
+                this.createNextPieceSpaces(2, 3);
+                this.setNextPieceActive(
+                    [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 2, y: 1 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+            case GamePieceType.Z:
+                this.createNextPieceSpaces(2, 3);
+                this.setNextPieceActive(
+                    [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 1, y: 1 },
+                        { x: 2, y: 1 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+            case GamePieceType.Z_INV:
+                this.createNextPieceSpaces(2, 3);
+                this.setNextPieceActive(
+                    [
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 0, y: 1 },
+                        { x: 1, y: 1 },
+                    ],
+                    gamePiece.color
+                );
+                break;
+        }
+
+        this.uiElements.nextPieceContainer.appendChild(nextPiece);
+    }
+
+    setNextPieceActive(position: Array<Coordinate>, color: Color): void {
+        const nextPiece = this.uiElements.nextPiece;
+
+        position.forEach(c => {
+            const p = nextPiece.children[c.y].children[c.x];
+            p.classList.add("next-piece-active");
+            p.setAttribute(
+                "style",
+                `${p.getAttribute("style")} background-color: ${
+                    color.color
+                }; border-color: ${color.border};`
+            );
+        });
+    }
+
+    createNextPieceSpaces(rows: number, cols: number): void {
+        const square = this.uiElements.statsPanel.clientWidth - 30;
+
+        for (let r = 0; r < rows; r++) {
+            const row = document.createElement("div");
+            row.setAttribute("style", `line-height: ${square / 5}px`);
+            for (let c = 0; c < cols; c++) {
+                const cell = document.createElement("div");
+                cell.classList.add("next-piece-cell");
+                cell.setAttribute(
+                    "style",
+                    `height: ${square / (cols + 1)}px; 
+                     width: ${square / (cols + 1)}px; 
+                     max-width: ${square / 4}px; 
+                     max-height: ${square / 4}px;`
+                );
+                row.appendChild(cell);
+            }
+            this.uiElements.nextPiece.appendChild(row);
+        }
     }
 
     /**

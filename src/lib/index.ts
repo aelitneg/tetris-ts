@@ -1,4 +1,4 @@
-import EventBus from "./EventBus";
+import { EventBus } from "./EventBus";
 import GameEngine from "./GameEngine";
 import UIEngine from "./UIEngine";
 
@@ -17,6 +17,6 @@ export default class Tetris {
         this.gameEngine = new GameEngine();
         this.uiEngine = new UIEngine(rootElement);
 
-        this.eventBus.publish("INIT");
+        this.eventBus.publish({ event: "INIT" });
     }
 }

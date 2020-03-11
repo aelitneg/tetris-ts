@@ -1,4 +1,5 @@
 import GamePiece from "./GamePiece";
+import { Coordinate, GamePieceType } from ".";
 
 export default class TType extends GamePiece {
     /**
@@ -7,7 +8,7 @@ export default class TType extends GamePiece {
      *   3
      */
     constructor() {
-        super();
+        super(GamePieceType.T);
 
         this.position = [
             { x: this.xOffset - 1, y: 0 },

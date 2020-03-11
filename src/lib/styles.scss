@@ -93,6 +93,23 @@
     margin-bottom: 5px;
 }
 
+.next-piece-container {
+    margin-top: 15px;
+    border: 1px solid blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.next-piece {
+    margin: 5px;
+}
+
+.next-piece-cell {
+    display: inline-block;
+    border: 1px solid black;
+}
+
 .paused {
     opacity: 0.5;
 }

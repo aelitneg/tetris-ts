@@ -1,13 +1,16 @@
 import { COLORS, GAME_COLS, GAME_ROWS } from "../../config";
+import { Color, Coordinate, GamePieceType } from ".";
 
-export default class GamePieceImpl implements GamePiece {
+export default class GamePiece {
+    type: GamePieceType;
     position: Array<Coordinate>;
     xOffset: number;
     cols: number;
     rows: number;
     color: Color;
     locking: boolean;
-    constructor() {
+    constructor(type: GamePieceType) {
+        this.type = type;
         this.cols = GAME_COLS;
         this.rows = GAME_ROWS;
 

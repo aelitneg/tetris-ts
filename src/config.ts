@@ -2,6 +2,8 @@
  * Game Configuration
  */
 
+import { Color } from "./lib/GamePiece";
+
 export const COLORS: Array<Color> = [
     { color: "red", border: "darkred" },
     { color: "orange", border: "black" },

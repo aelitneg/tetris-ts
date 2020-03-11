@@ -1,4 +1,5 @@
 import GamePiece from "./GamePiece";
+import { Coordinate, GamePieceType } from ".";
 
 export default class ZInvType extends GamePiece {
     /**
@@ -7,7 +8,7 @@ export default class ZInvType extends GamePiece {
      * 2 3
      */
     constructor() {
-        super();
+        super(GamePieceType.Z_INV);
 
         this.position = [
             { x: this.xOffset, y: 0 },
