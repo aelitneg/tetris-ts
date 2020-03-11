@@ -79,21 +79,23 @@
 }
 
 .stats-panel {
-    padding: 15px;
     text-align: center;
 }
 
 .stats-label {
+    margin: 15px;
     font-size: 0.75em;
     text-decoration: underline;
 }
 
 .stats-value {
+    margin: 15px;
     font-size: 0.75em;
     margin-bottom: 5px;
 }
 
 .next-piece-container {
+    margin: 0px 5px;
     margin-top: 15px;
     border: 1px solid blue;
     display: flex;
@@ -102,7 +104,6 @@
 }
 
 .next-piece {
-    margin: 5px;
 }
 
 .next-piece-cell {

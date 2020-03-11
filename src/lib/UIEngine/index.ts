@@ -333,7 +333,10 @@ export default class UIEngine {
 
         const nextPieceContainer = document.createElement("div");
         nextPieceContainer.classList.add("next-piece-container");
-        nextPieceContainer.setAttribute("style", `height: ${square}px;`);
+        nextPieceContainer.setAttribute(
+            "style",
+            `height: ${square}px; width: ${square}`
+        );
 
         this.uiElements.nextPieceContainer = nextPieceContainer;
         this.uiElements.statsPanel.appendChild(nextPieceContainer);
@@ -460,16 +463,14 @@ export default class UIEngine {
 
         for (let r = 0; r < rows; r++) {
             const row = document.createElement("div");
-            row.setAttribute("style", `line-height: ${square / 5}px`);
+            row.setAttribute("style", `line-height: ${square / 4}px`);
             for (let c = 0; c < cols; c++) {
                 const cell = document.createElement("div");
                 cell.classList.add("next-piece-cell");
                 cell.setAttribute(
                     "style",
-                    `height: ${square / (cols + 1)}px; 
-                     width: ${square / (cols + 1)}px; 
-                     max-width: ${square / 4}px; 
-                     max-height: ${square / 4}px;`
+                    `height: ${square / 5}px; 
+                    width: ${square / 5}px;`
                 );
                 row.appendChild(cell);
             }
