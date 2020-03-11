@@ -217,6 +217,7 @@ export default class UIEngine {
             { name: "RIGHT ARROW", desc: "MOVE RIGHT" },
             { name: "DOWN ARROW", desc: "MOVE DOWN" },
             { name: "UP ARROW", desc: "ROTATE" },
+            { name: "SPACE", desc: "PAUSE" },
         ];
 
         const controlTable = document.createElement("table");
