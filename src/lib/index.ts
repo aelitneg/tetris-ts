@@ -7,14 +7,14 @@ export default class Tetris {
     gameEngine: GameEngine;
     uiEngine: UIEngine;
 
-    constructor(rootElement: Element) {
+    constructor(rootElement: Element, statsCallback: Function) {
         if (!rootElement) {
             throw new Error("Tetris - constructor No DOM Element provided.");
         }
 
         this.eventBus = EventBus.getInstance();
 
-        this.gameEngine = new GameEngine();
+        this.gameEngine = new GameEngine(statsCallback);
         this.uiEngine = new UIEngine(rootElement);
 
         this.eventBus.publish({ event: "INIT" });

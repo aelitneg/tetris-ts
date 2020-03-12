@@ -151,6 +151,7 @@ export default class UIEngine {
     }
 
     resetUI(): void {
+        this.gameState = GameState.STOPPED;
         this.rootElement.innerHTML = "";
         this.uiElements = {};
         this.initUI();

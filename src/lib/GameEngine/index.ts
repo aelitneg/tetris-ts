@@ -6,6 +6,7 @@ import { Coordinate, newGamePiece } from "../GamePiece";
 import { EventBus } from "../EventBus";
 
 export default class GameEngine {
+    private statsCallback: Function;
     private stateMap: boolean[][];
     private eventBus: EventBus;
     private activePiece: GamePiece;
@@ -15,7 +16,8 @@ export default class GameEngine {
     private lineCount: number;
     private level: number;
 
-    constructor() {
+    constructor(statsCallback: Function) {
+        this.statsCallback = statsCallback;
         this.eventBus = EventBus.getInstance();
 
         this.subscribeToEvents();
@@ -127,10 +129,11 @@ export default class GameEngine {
         ) {
             this.gameState = GameState.STOPPED;
 
-            console.log("GAME OVER");
-            console.log("POINTS:", this.points);
-            console.log("LINES:", this.lineCount);
-            console.log("LEVEL:", this.level);
+            this.statsCallback({
+                points: this.points,
+                lines: this.lineCount,
+                level: this.level,
+            });
 
             this.resetGame();
         }

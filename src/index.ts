@@ -1,8 +1,8 @@
 import Tetris from "./lib/index";
 
-export function play(el: Element): void {
+export function play(el: Element, callback: Function): void {
     try {
-        new Tetris(el);
+        new Tetris(el, callback);
     } catch (error) {
         console.error("[tetris-ts]", error);
     }

@@ -31,8 +31,15 @@
     <footer>
         <script src="main.js"></script>
         <script>
+            const tetrisCallback = function(stats) {
+                console.log("GAME OVER");
+                console.log("POINTS:", this.points);
+                console.log("LINES:", this.lineCount);
+                console.log("LEVEL:", this.level);
+            };
+
             var el = document.getElementById("tetris");
-            window.Tetris.play(el);
+            window.Tetris.play(el, tetrisCallback);
         </script>
     </footer>
 </html>
