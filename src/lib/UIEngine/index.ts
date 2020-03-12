@@ -4,7 +4,6 @@ import { GameState } from "../enum";
 import { EventBus, GamePieceEvent, RowEvent, StatsEvent } from "../EventBus";
 import { GAME_COLS, GAME_ROWS } from "../../config";
 import "../styles.scss";
-import { clearLine } from "readline";
 
 export default class UIEngine {
     eventBus: EventBus;
@@ -75,6 +74,10 @@ export default class UIEngine {
                     break;
                 case "Space":
                     this.eventBus.publish({ event: "INPUT_SPACE" });
+                    break;
+                case "Escape":
+                    this.eventBus.publish({ event: "INPUT_ESC" });
+                    break;
             }
         });
     }
@@ -123,6 +126,10 @@ export default class UIEngine {
             "INPUT_SPACE",
             this.inputSpaceHandler.bind(this)
         );
+
+        this.eventBus.subscribe("INPUT_ESC", (): void => {
+            this.resetUI();
+        });
     }
 
     playClickHandler(): void {
@@ -141,6 +148,12 @@ export default class UIEngine {
                 this.gameState = GameState.PLAYING;
                 break;
         }
+    }
+
+    resetUI(): void {
+        this.rootElement.innerHTML = "";
+        this.uiElements = {};
+        this.initUI();
     }
 
     /**
@@ -218,6 +231,7 @@ export default class UIEngine {
             { name: "DOWN ARROW", desc: "MOVE DOWN" },
             { name: "UP ARROW", desc: "ROTATE" },
             { name: "SPACE", desc: "PAUSE" },
+            { name: "ESC", desc: "QUIT" },
         ];
 
         const controlTable = document.createElement("table");
@@ -351,7 +365,6 @@ export default class UIEngine {
         }
 
         const nextPiece = document.createElement("div");
-        nextPiece.classList.add("next-piece");
         this.uiElements.nextPiece = nextPiece;
 
         switch (gamePiece.type) {
@@ -449,7 +462,6 @@ export default class UIEngine {
 
         position.forEach(c => {
             const p = nextPiece.children[c.y].children[c.x];
-            p.classList.add("next-piece-active");
             p.setAttribute(
                 "style",
                 `${p.getAttribute("style")} background-color: ${

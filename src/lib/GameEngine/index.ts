@@ -16,13 +16,21 @@ export default class GameEngine {
     private level: number;
 
     constructor() {
-        this.gameState = GameState.INIT;
-
-        this.initStateMap();
-
         this.eventBus = EventBus.getInstance();
 
         this.subscribeToEvents();
+
+        this.resetGame();
+    }
+
+    resetGame(): void {
+        this.initStateMap();
+
+        this.points = 0;
+        this.lineCount = 0;
+        this.level = 0;
+
+        this.gameState = GameState.INIT;
     }
 
     /**
@@ -66,6 +74,10 @@ export default class GameEngine {
         this.eventBus.subscribe("INPUT_SPACE", () => {
             this.togglePauseGame();
         });
+
+        this.eventBus.subscribe("INPUT_ESC", () => {
+            this.endGame();
+        });
     }
 
     /**
@@ -74,6 +86,9 @@ export default class GameEngine {
     startGame(): void {
         console.log("[tetris-ts GameEngine] Starting Game");
         this.gameState = GameState.PLAYING;
+
+        this.activePiece = null;
+        this.nextPiece = null;
 
         this.points = 0;
         this.eventBus.publishStatsEvent({
@@ -102,6 +117,22 @@ export default class GameEngine {
         } else if (this.gameState === GameState.PAUSED) {
             this.gameState = GameState.PLAYING;
             this.run();
+        }
+    }
+
+    endGame(): void {
+        if (
+            this.gameState === GameState.PLAYING ||
+            this.gameState === GameState.PAUSED
+        ) {
+            this.gameState = GameState.STOPPED;
+
+            console.log("GAME OVER");
+            console.log("POINTS:", this.points);
+            console.log("LINES:", this.lineCount);
+            console.log("LEVEL:", this.level);
+
+            this.resetGame();
         }
     }
 
@@ -144,10 +175,7 @@ export default class GameEngine {
         } else if (this.gameState !== GameState.PAUSED) {
             this.activePiece = null;
 
-            console.log("GAME OVER");
-            console.log("POINTS:", this.points);
-            console.log("LINES:", this.lineCount);
-            console.log("LEVEL:", this.level);
+            this.endGame();
         }
     }
 
