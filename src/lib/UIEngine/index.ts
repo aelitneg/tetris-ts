@@ -95,15 +95,30 @@ export default class UIEngine {
         });
 
         this.eventBus.subscribe("DRAW_ACTIVE", (event: GamePieceEvent) => {
-            this.drawGamePiece(event.gamePiece);
+            if (
+                this.gameState === GameState.PLAYING ||
+                this.gameState === GameState.PAUSED
+            ) {
+                this.drawGamePiece(event.gamePiece);
+            }
         });
 
         this.eventBus.subscribe("ERASE_ACTIVE", (event: GamePieceEvent) => {
-            this.eraseGamePiece(event.gamePiece);
+            if (
+                this.gameState === GameState.PLAYING ||
+                this.gameState === GameState.PAUSED
+            ) {
+                this.eraseGamePiece(event.gamePiece);
+            }
         });
 
         this.eventBus.subscribe("REMOVE_ROWS", (event: RowEvent) => {
-            this.completeRow(event.rows);
+            if (
+                this.gameState === GameState.PLAYING ||
+                this.gameState === GameState.PAUSED
+            ) {
+                this.completeRow(event.rows);
+            }
         });
 
         this.eventBus.subscribe("UPDATE_POINTS", (event: StatsEvent) => {
@@ -119,7 +134,12 @@ export default class UIEngine {
         });
 
         this.eventBus.subscribe("DRAW_NEXT", (event: GamePieceEvent) => {
-            this.drawNextPiece(event.gamePiece);
+            if (
+                this.gameState === GameState.PLAYING ||
+                this.gameState === GameState.PAUSED
+            ) {
+                this.drawNextPiece(event.gamePiece);
+            }
         });
 
         this.eventBus.subscribe(

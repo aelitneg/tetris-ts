@@ -78,7 +78,12 @@ export default class GameEngine {
         });
 
         this.eventBus.subscribe("INPUT_ESC", () => {
-            this.endGame();
+            if (
+                this.gameState === GameState.PLAYING ||
+                this.gameState === GameState.PAUSED
+            ) {
+                this.gameState = GameState.STOPPED;
+            }
         });
     }
 
@@ -123,20 +128,15 @@ export default class GameEngine {
     }
 
     endGame(): void {
-        if (
-            this.gameState === GameState.PLAYING ||
-            this.gameState === GameState.PAUSED
-        ) {
-            this.gameState = GameState.STOPPED;
+        this.gameState = GameState.STOPPED;
 
-            this.statsCallback({
-                points: this.points,
-                lines: this.lineCount,
-                level: this.level,
-            });
+        this.statsCallback({
+            points: this.points,
+            lines: this.lineCount,
+            level: this.level,
+        });
 
-            this.resetGame();
-        }
+        this.resetGame();
     }
 
     /**
