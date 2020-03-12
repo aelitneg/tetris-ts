@@ -1,113 +1,115 @@
-.container {
-    display: flex;
-    flex: 1;
-    height: 100%;
-    background-color: black;
-    font-family: "Lucida Console", Monaco, monospace;
-}
+#tetris {
+    .container {
+        display: flex;
+        flex: 1;
+        height: 100%;
+        background-color: black;
+        font-family: "Lucida Console", Monaco, monospace;
+    }
 
-.main-panel {
-    width: 100%;
-}
+    .main-panel {
+        width: 100%;
+    }
 
-.controls {
-    padding: 15px;
-}
+    .controls {
+        padding: 15px;
+    }
 
-.control-table {
-    width: 100%;
-    font-size: 0.75em;
-    border: 1px solid blue;
-    padding: 5px;
+    .control-table {
+        width: 100%;
+        font-size: 0.75em;
+        border: 1px solid blue;
+        padding: 5px;
 
-    td {
+        td {
+            text-align: center;
+        }
+    }
+
+    .label {
+        font-weight: bold;
+        font-size: 0.85em;
+        padding: 5px 0px;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .button {
+        display: inline-block;
+        background-color: black;
+        border: 1px solid blue;
+        padding: 5px;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: blue;
+    }
+
+    .text-center {
         text-align: center;
     }
-}
 
-.label {
-    font-weight: bold;
-    font-size: 0.85em;
-    padding: 5px 0px;
-    text-align: center;
-    text-decoration: underline;
-}
+    .game-panel {
+        display: flex;
+        flex: 1;
+        background-color: black;
+    }
 
-.button {
-    display: inline-block;
-    background-color: black;
-    border: 1px solid blue;
-    padding: 5px;
-    margin: 5px;
-    cursor: pointer;
-}
+    .game-board {
+        flex: 1;
+        align-self: flex-end;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 15px 0px 15px 15px;
+    }
 
-.button:hover {
-    background-color: blue;
-}
+    .game-row {
+        display: flex;
+        width: 100%;
+    }
 
-.text-center {
-    text-align: center;
-}
+    .game-space {
+        flex: 1;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
 
-.game-panel {
-    display: flex;
-    flex: 1;
-    background-color: black;
-}
+    .game-piece {
+        border-width: 1px;
+        border-style: solid;
+    }
 
-.game-board {
-    flex: 1;
-    align-self: flex-end;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 15px 0px 15px 15px;
-}
+    .stats-panel {
+        text-align: center;
+    }
 
-.game-row {
-    display: flex;
-    width: 100%;
-}
+    .stats-label {
+        margin: 5px 15px;
+        font-size: 0.75em;
+        text-decoration: underline;
+    }
 
-.game-space {
-    flex: 1;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-}
+    .stats-value {
+        margin: 5px 15px;
+        font-size: 0.75em;
+        margin-bottom: 5px;
+    }
 
-.game-piece {
-    border-width: 1px;
-    border-style: solid;
-}
+    .next-piece-container {
+        margin: 0px 5px;
+        margin-top: 15px;
+        border: 1px solid blue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.stats-panel {
-    text-align: center;
-}
+    .next-piece-cell {
+        display: inline-block;
+        border: 1px solid black;
+    }
 
-.stats-label {
-    margin: 5px 15px;
-    font-size: 0.75em;
-    text-decoration: underline;
-}
-
-.stats-value {
-    margin: 5px 15px;
-    font-size: 0.75em;
-    margin-bottom: 5px;
-}
-
-.next-piece-container {
-    margin: 0px 5px;
-    margin-top: 15px;
-    border: 1px solid blue;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.next-piece-cell {
-    display: inline-block;
-    border: 1px solid black;
-}
-
-.paused {
-    opacity: 0.5;
+    .paused {
+        opacity: 0.5;
+    }
 }
