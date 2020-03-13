@@ -1,7 +1,18 @@
+/**
+ * GameEngine
+ *
+ * This class contains the logic for the game. It maintains
+ * the game state (including the map of pieces), validates movements,
+ * and dispatches events to the UIEngine.
+ */
 import { FRAME_CONST, GAME_COLS, GAME_ROWS } from "../../config";
-import { GameState } from "../enum";
-import GamePiece from "../GamePiece/GamePiece";
+import { GameState } from "../GameState";
+
+// Types and Wrapper Methods from GamePiece
 import { Coordinate, newGamePiece } from "../GamePiece";
+
+// GamePiece Class
+import GamePiece from "../GamePiece/GamePiece";
 
 import { EventBus } from "../EventBus";
 
@@ -18,35 +29,11 @@ export default class GameEngine {
 
     constructor(statsCallback: Function) {
         this.statsCallback = statsCallback;
-        this.eventBus = EventBus.getInstance();
 
+        this.eventBus = EventBus.getInstance();
         this.subscribeToEvents();
 
         this.resetGame();
-    }
-
-    resetGame(): void {
-        this.initStateMap();
-
-        this.points = 0;
-        this.lineCount = 0;
-        this.level = 0;
-
-        this.gameState = GameState.INIT;
-    }
-
-    /**
-     * Initialize the stateMap to bounds
-     */
-    initStateMap(): void {
-        this.stateMap = [];
-
-        for (let i = 0; i < GAME_ROWS; i++) {
-            this.stateMap[i] = [];
-            for (let j = 0; j < GAME_COLS; j++) {
-                this.stateMap[i][j] = false;
-            }
-        }
     }
 
     /**
@@ -88,10 +75,34 @@ export default class GameEngine {
     }
 
     /**
-     * Start the game
+     * Initialize the stateMap to bounds
      */
+    initStateMap(): void {
+        this.stateMap = [];
+
+        for (let i = 0; i < GAME_ROWS; i++) {
+            this.stateMap[i] = [];
+            for (let j = 0; j < GAME_COLS; j++) {
+                this.stateMap[i][j] = false;
+            }
+        }
+    }
+
+    /**
+     * Ready the GameEngine for play
+     */
+    resetGame(): void {
+        this.initStateMap();
+
+        this.points = 0;
+        this.lineCount = 0;
+        this.level = 0;
+
+        this.gameState = GameState.INIT;
+    }
+
     startGame(): void {
-        console.log("[tetris-ts GameEngine] Starting Game");
+        console.log("[tetris-ts] Starting Game");
         this.gameState = GameState.PLAYING;
 
         this.activePiece = null;
@@ -130,6 +141,10 @@ export default class GameEngine {
     endGame(): void {
         this.gameState = GameState.STOPPED;
 
+        this.activePiece = null;
+        this.nextPiece = null;
+
+        // Pass score data out of the library
         this.statsCallback({
             points: this.points,
             lines: this.lineCount,
@@ -140,8 +155,9 @@ export default class GameEngine {
     }
 
     /**
-     * Main loop. Move GamePiece down and generate
-     * new ones.
+     * Main game loop. This method controls the automatic falling
+     * of pieces, when to generate new game pieces, and when to
+     * clear completed rows.
      */
     run(): void {
         if (this.gameState == GameState.PLAYING) {
@@ -149,60 +165,49 @@ export default class GameEngine {
                 this.activePiece &&
                 this.validateTransform(this.activePiece.getDownTransform())
             ) {
+                // If activePiece can move down...
                 this.moveDown();
 
+                // Wait for next cycle to run again
                 setTimeout(() => {
                     this.run();
                 }, this.getTimeout());
             } else if (this.activePiece) {
+                // If activePiece cannot move down, set locking state
                 this.activePiece.locking = true;
 
+                // Wait one cycle for 'slide' moves
                 setTimeout(() => {
+                    // Check if 'slide' move removed the piece from lock
                     if (this.activePiece.locking) {
                         this.activePiece = null;
                         this.checkCompleteRows();
                         this.generateGamePiece();
                     }
 
+                    // Wait for next cycle to run again
                     setTimeout(() => {
                         this.run();
                     }, this.getTimeout());
                 }, this.getTimeout());
             } else {
+                // If no activePiece, make a new one
                 this.generateGamePiece();
 
+                // Wait for next cycle to run again
                 setTimeout(() => {
                     this.run();
                 }, this.getTimeout());
             }
         } else if (this.gameState !== GameState.PAUSED) {
-            this.activePiece = null;
+            // If not playing or paused, end the game
 
             this.endGame();
         }
     }
 
     /**
-     * Calculate the timeout between drops
-     */
-    getTimeout(): number {
-        if (this.level < 10) {
-            return ((48 - 5 * this.level) / FRAME_CONST) * 1000;
-        } else if (this.level >= 10 && this.level < 13) {
-            return (5 / FRAME_CONST) * 1000;
-        } else if (this.level >= 13 && this.level < 16) {
-            return (4 / FRAME_CONST) * 1000;
-        } else if (this.level >= 16 && this.level < 19) {
-            return (3 / FRAME_CONST) * 1000;
-        } else if (this.level >= 19 && this.level < 29) {
-            return (2 / FRAME_CONST) * 1000;
-        } else {
-            return (1 / FRAME_CONST) * 1000;
-        }
-    }
-
-    /**
-     * Generate a new GamePiece
+     * Generate game pieces
      */
     generateGamePiece(): void {
         if (!this.nextPiece) {
@@ -483,6 +488,28 @@ export default class GameEngine {
             return false;
         } catch (result) {
             return result;
+        }
+    }
+
+    /**
+     * Calculate the duration of a game cycle, or
+     * the time between automatic down moves. The algorithim
+     * starts out a 48 frames per cycle and steps down as the level
+     * increases.
+     */
+    getTimeout(): number {
+        if (this.level < 10) {
+            return ((48 - 5 * this.level) / FRAME_CONST) * 1000;
+        } else if (this.level >= 10 && this.level < 13) {
+            return (5 / FRAME_CONST) * 1000;
+        } else if (this.level >= 13 && this.level < 16) {
+            return (4 / FRAME_CONST) * 1000;
+        } else if (this.level >= 16 && this.level < 19) {
+            return (3 / FRAME_CONST) * 1000;
+        } else if (this.level >= 19 && this.level < 29) {
+            return (2 / FRAME_CONST) * 1000;
+        } else {
+            return (1 / FRAME_CONST) * 1000;
         }
     }
 

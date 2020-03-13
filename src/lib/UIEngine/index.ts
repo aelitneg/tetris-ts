@@ -1,6 +1,6 @@
 import GamePiece from "../GamePiece/GamePiece";
 import { Color, Coordinate, GamePieceType } from "../GamePiece";
-import { GameState } from "../enum";
+import { GameState } from "../GameState";
 import { EventBus, GamePieceEvent, RowEvent, StatsEvent } from "../EventBus";
 import { GAME_COLS, GAME_ROWS } from "../../config";
 import "../styles.scss";

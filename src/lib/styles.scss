@@ -1,3 +1,8 @@
+// styles.css
+//
+// To prevent leaking styles out of the lib, we scope
+// to the ID of our element.
+
 #tetris {
     .container {
         display: flex;
