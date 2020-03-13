@@ -9,6 +9,8 @@ export default class GamePiece {
     rows: number;
     color: Color;
     locking: boolean;
+    nextPieceMap: Array<Coordinate>;
+    nextPieceDims: { rows: number; cols: number };
     constructor(type: GamePieceType) {
         this.type = type;
         this.cols = GAME_COLS;

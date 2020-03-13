@@ -15,6 +15,15 @@ export default class LineType extends GamePiece {
             { x: this.xOffset + 1, y: 0 },
             { x: this.xOffset + 2, y: 0 },
         ];
+
+        this.nextPieceMap = [
+            { x: 0, y: 0 },
+            { x: 1, y: 0 },
+            { x: 2, y: 0 },
+            { x: 3, y: 0 },
+        ];
+
+        this.nextPieceDims = { rows: 1, cols: 4 };
     }
 
     /**

@@ -16,6 +16,15 @@ export default class TType extends GamePiece {
             { x: this.xOffset + 1, y: 0 },
             { x: this.xOffset, y: 1 },
         ];
+
+        this.nextPieceMap = [
+            { x: 0, y: 0 },
+            { x: 1, y: 0 },
+            { x: 2, y: 0 },
+            { x: 1, y: 1 },
+        ];
+
+        this.nextPieceDims = { rows: 2, cols: 3 };
     }
 
     /**

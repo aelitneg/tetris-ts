@@ -16,6 +16,15 @@ export default class ZType extends GamePiece {
             { x: this.xOffset, y: 1 },
             { x: this.xOffset + 1, y: 1 },
         ];
+
+        this.nextPieceMap = [
+            { x: 0, y: 0 },
+            { x: 1, y: 0 },
+            { x: 1, y: 1 },
+            { x: 2, y: 1 },
+        ];
+
+        this.nextPieceDims = { rows: 2, cols: 3 };
     }
 
     /**
