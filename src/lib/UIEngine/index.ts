@@ -1,3 +1,15 @@
+/**
+ * UIEngine
+ *
+ * This class contains the logic for the UI. It handles
+ * user input and dispatches events to the EventBus for the
+ * GameEngine. It also makes calls to the Rener class to
+ * manipulate the DOM.
+ *
+ * The UIEngine stores references to the DOM objects in
+ * uiElements. This is an object where each key is the friendly
+ * name of the DOM object which is referenced in the value.
+ */
 import { GameState } from "../GameState";
 import { EventBus, GamePieceEvent, RowEvent, StatsEvent } from "../EventBus";
 import Render from "./Render";
@@ -10,6 +22,10 @@ export default class UIEngine {
     uiElements: { [key: string]: Element };
     gameState: GameState;
 
+    /**
+     * Constructor
+     * @param rootElement DOM element which all other elements will be built from
+     */
     constructor(rootElement: Element) {
         console.log(
             `[tetris-ts] rootElement dimensions ${rootElement.clientWidth}x${rootElement.clientHeight}`
@@ -28,7 +44,10 @@ export default class UIEngine {
     }
 
     /**
-     * Add Key Listeners and Bind to Handlers
+     * Setup event listeners for key presses
+     *
+     * Using keydown lets us take advantage of the
+     * repeat key when a key is held down.
      */
     createInputListeners(): void {
         document.addEventListener("keydown", e => {

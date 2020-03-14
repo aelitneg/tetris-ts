@@ -1,16 +1,23 @@
+/**
+ * GamePiece
+ *
+ * This is the base class for all other game pieces. All the
+ * game pieces are exntended by this class.
+ */
 import { COLORS, GAME_COLS, GAME_ROWS } from "../../config";
 import { Color, Coordinate, GamePieceType } from ".";
 
 export default class GamePiece {
     type: GamePieceType;
     position: Array<Coordinate>;
-    xOffset: number;
-    cols: number;
-    rows: number;
+    xOffset: number; // Offset to center the piece on the board when generated
+    cols: number; // Alias for GAME_COLS
+    rows: number; // Alias for GAME_ROWS
     color: Color;
-    locking: boolean;
-    nextPieceMap: Array<Coordinate>;
-    nextPieceDims: { rows: number; cols: number };
+    locking: boolean; // Flag for when a piece can be slid in its final position
+    nextPieceMap: Array<Coordinate>; // Coordinates for the next piece hint
+    nextPieceDims: { rows: number; cols: number }; // Dims for the next piece hint
+
     constructor(type: GamePieceType) {
         this.type = type;
         this.cols = GAME_COLS;

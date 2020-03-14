@@ -1,3 +1,9 @@
+/**
+ * Render
+ *
+ * This class exclusively handles DOM manipulation. It is responsible
+ * for adding and removing the uiElements to and form the DOM.
+ */
 import { GAME_COLS, GAME_ROWS } from "../../config";
 import GamePiece from "../GamePiece/GamePiece";
 import { Coordinate, Color } from "../GamePiece";
