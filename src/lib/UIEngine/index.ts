@@ -182,8 +182,13 @@ export default class UIEngine {
 
     resetUI(): void {
         this.gameState = GameState.STOPPED;
+
         this.rootElement.innerHTML = "";
-        this.uiElements = {};
+
+        Object.keys(this.uiElements).forEach(key => {
+            delete this.uiElements[key];
+        });
+
         this.createMainMenu();
     }
 
