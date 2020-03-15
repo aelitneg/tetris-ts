@@ -1,14 +1,16 @@
 {
     "name": "tetris-ts",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Tetris in TypeScript",
-    "main": "index.ts",
+    "main": "./dist/tetris-ts.js",
+    "types": "./dist/index.d.ts",
     "author": "Andrew Gentile <agentile1990@gmail.com>",
     "license": "MIT",
     "private": true,
     "scripts": {
-        "build:dev": "webpack --config ./webpack.config.js",
-        "dev": "webpack-dev-server --open"
+        "build:prod": "webpack --config ./webpack.config.js",
+        "build:dev": "webpack --config ./webpack.config.dev.js",
+        "dev": "webpack-dev-server --open --config ./webpack.config.dev.js"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^2.19.0",

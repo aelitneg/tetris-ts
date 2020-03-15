@@ -1,7 +1,13 @@
 const path = require("path"); // eslint-disable-line @typescript-eslint/no-var-requires
 
 module.exports = {
-    mode: "production",
+    mode: "development",
+    devtool: "source-map",
+    devServer: {
+        contentBase: "./dist",
+        compress: true,
+        port: 9000,
+    },
     entry: "./src/index.ts",
     output: {
         library: "Tetris",

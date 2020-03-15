@@ -29,7 +29,7 @@
     </body>
 
     <footer>
-        <script src="main.js"></script>
+        <script src="tetris-ts.js"></script>
         <script>
             const tetrisCallback = function(stats) {
                 console.log("GAME OVER");
@@ -38,8 +38,10 @@
                 console.log("LEVEL:", this.level);
             };
 
-            var el = document.getElementById("tetris");
-            window.Tetris.play(el, tetrisCallback);
+            const el = document.getElementById("tetris");
+            const tetris = new Tetris(el, data => {
+                console.log(data);
+            });
         </script>
     </footer>
 </html>
