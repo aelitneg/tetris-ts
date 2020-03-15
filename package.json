@@ -5,6 +5,10 @@
     "main": "./dist/tetris-ts.js",
     "types": "./dist/index.d.ts",
     "author": "Andrew Gentile <agentile1990@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/agentile1990/tetris-ts"
+    },
     "license": "MIT",
     "private": true,
     "scripts": {
