@@ -1,6 +1,6 @@
 {
     "name": "tetris-ts",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Tetris in TypeScript",
     "main": "./dist/tetris-ts.js",
     "types": "./dist/index.d.ts",
@@ -9,7 +9,10 @@
         "type": "git",
         "url": "https://github.com/agentile1990/tetris-ts"
     },
-    "keywords": ["tetris", "typescript"],
+    "keywords": [
+        "tetris",
+        "typescript"
+    ],
     "license": "MIT",
     "private": false,
     "scripts": {
