@@ -10,7 +10,7 @@
         "url": "https://github.com/agentile1990/tetris-ts"
     },
     "license": "MIT",
-    "private": true,
+    "private": false,
     "scripts": {
         "build:prod": "webpack --config ./webpack.config.js",
         "build:dev": "webpack --config ./webpack.config.dev.js",
