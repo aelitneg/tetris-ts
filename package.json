@@ -9,7 +9,7 @@
         "type": "git",
         "url": "https://github.com/agentile1990/tetris-ts"
     },
-    "keywords": ["tetris", "typescript"]
+    "keywords": ["tetris", "typescript"],
     "license": "MIT",
     "private": false,
     "scripts": {
