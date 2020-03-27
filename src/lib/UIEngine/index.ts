@@ -51,6 +51,7 @@ export default class UIEngine {
      */
     createInputListeners(): void {
         document.addEventListener("keydown", e => {
+            e.preventDefault();
             switch (e.code) {
                 case "ArrowLeft":
                     this.eventBus.publish({ event: "INPUT_LEFT" });
