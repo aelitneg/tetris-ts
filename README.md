@@ -32,10 +32,11 @@ import Tetris from "tetris-ts";
 const Tetris = require("tetris-ts");
 ```
 
-The library takes 2 parameters in the constructor
+The library takes 3 parameters in the constructor
 
 -   DOM Element to attach to
 -   Callback function invoked when a game finishes
+-   Options object _(optional)_ for customizations
 
 _Important: The width of the DOM element determines the size of the game._
 
@@ -50,15 +51,26 @@ const callback = function(data) {
     // Do something with the data returned from the game
 };
 
-const tetris = new Tetris(el, callback);
+const tetris = new Tetris(el, callback, {
+    frameConstant: 60,
+    linesPerLevel: 10,
+});
 ```
 
-Data is returned as an object with the following properties:
-| Property | Data Type | Description |
-| -------- | :-------: | --------------------- |
-| points | Number | Total points earned |
-| lines | Number | Total lines cleared |
-| level | Number | Highest level achieved|
+#### The Options object has the following properties:
+
+| Property      | Description                                 | Default |
+| ------------- | ------------------------------------------- | ------- |
+| frameConstant | Controls the speed of the game              | 60.8    |
+| linesPerLevel | Completed lines needed to advance the level | 10      |
+
+#### Data is returned as an object with the following properties:
+
+| Property | Data Type | Description            |
+| -------- | :-------: | ---------------------- |
+| points   |  Number   | Total points earned    |
+| lines    |  Number   | Total lines cleared    |
+| level    |  Number   | Highest level achieved |
 
 ## About
 
