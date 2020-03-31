@@ -1,3 +1,11 @@
+/**
+ * GameEngine
+ *
+ * This class contains the logic for the game. It maintains
+ * the game state (including the map of pieces), validates movements,
+ * and dispatches events to the UIEngine.
+ */
+import { Options } from "../../config";
 import { Coordinate } from "../GamePiece";
 import GamePiece from "../GamePiece/GamePiece";
 export default class GameEngine {
@@ -10,7 +18,14 @@ export default class GameEngine {
     private points;
     private lineCount;
     private level;
-    constructor(statsCallback: Function);
+    private frameConst;
+    private linesPerLevel;
+    constructor(statsCallback: Function, options: Options);
+    /**
+     * Parse and set user options
+     * @param options User supplied options
+     */
+    parseOptions(options: Options): void;
     /**
      * Subscribe to EventBus events and setup handlers
      */

@@ -1,6 +1,6 @@
 {
     "name": "tetris-ts",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Tetris in TypeScript",
     "main": "./dist/tetris-ts.js",
     "types": "./dist/index.d.ts",
