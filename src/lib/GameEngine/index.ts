@@ -5,7 +5,13 @@
  * the game state (including the map of pieces), validates movements,
  * and dispatches events to the UIEngine.
  */
-import { FRAME_CONST, GAME_COLS, GAME_ROWS } from "../../config";
+import {
+    FRAME_CONST,
+    GAME_COLS,
+    GAME_ROWS,
+    LINES_PER_LEVEL,
+    Options,
+} from "../../config";
 import { GameState } from "../GameState";
 
 // Types and Wrapper Methods from GamePiece
@@ -26,14 +32,36 @@ export default class GameEngine {
     private points: number;
     private lineCount: number;
     private level: number;
+    private frameConst: number;
+    private linesPerLevel: number;
 
-    constructor(statsCallback: Function) {
+    constructor(statsCallback: Function, options: Options) {
+        this.parseOptions(options);
+
         this.statsCallback = statsCallback;
 
         this.eventBus = EventBus.getInstance();
         this.subscribeToEvents();
 
         this.resetGame();
+    }
+
+    /**
+     * Parse and set user options
+     * @param options User supplied options
+     */
+    parseOptions(options: Options): void {
+        if (!options) {
+            this.frameConst = FRAME_CONST;
+            this.linesPerLevel = LINES_PER_LEVEL;
+
+            return;
+        }
+
+        this.frameConst =
+            options.frameConstant > 0 ? options.frameConstant : FRAME_CONST;
+        this.linesPerLevel =
+            options.linesPerLevel > 0 ? options.linesPerLevel : LINES_PER_LEVEL;
     }
 
     /**
@@ -498,18 +526,20 @@ export default class GameEngine {
      * increases.
      */
     getTimeout(): number {
-        if (this.level < 10) {
-            return ((48 - 5 * this.level) / FRAME_CONST) * 1000;
+        if (this.level < 9) {
+            return ((48 - 5 * this.level) / this.frameConst) * 1000;
+        } else if (this.level === 9) {
+            return (6 / this.frameConst) * 1000;
         } else if (this.level >= 10 && this.level < 13) {
-            return (5 / FRAME_CONST) * 1000;
+            return (5 / this.frameConst) * 1000;
         } else if (this.level >= 13 && this.level < 16) {
-            return (4 / FRAME_CONST) * 1000;
+            return (4 / this.frameConst) * 1000;
         } else if (this.level >= 16 && this.level < 19) {
-            return (3 / FRAME_CONST) * 1000;
+            return (3 / this.frameConst) * 1000;
         } else if (this.level >= 19 && this.level < 29) {
-            return (2 / FRAME_CONST) * 1000;
+            return (2 / this.frameConst) * 1000;
         } else {
-            return (1 / FRAME_CONST) * 1000;
+            return (1 / this.frameConst) * 1000;
         }
     }
 
@@ -542,7 +572,7 @@ export default class GameEngine {
             value: this.lineCount,
         });
 
-        if (this.lineCount >= (this.level + 1) * 10) {
+        if (this.lineCount >= (this.level + 1) * this.linesPerLevel) {
             this.level++;
             this.eventBus.publishStatsEvent({
                 event: "UPDATE_LEVEL",

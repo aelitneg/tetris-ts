@@ -40,4 +40,24 @@ export const GAME_ROWS = 20;
  * the amout of time for each frame.
  * per second.
  */
-export const FRAME_CONST = 60.0988; // Frame Rate
+export const FRAME_CONST = 60.0988;
+
+/**
+ * Lines Per Level
+ *
+ * This option controls how many lines must
+ * be completed to reach the next level.
+ */
+export const LINES_PER_LEVEL = 10;
+
+/**
+ * Options
+ *
+ * This interface describes the exposed options which can
+ * be set by the developer consuming the library. The Tetris
+ * constructor takes an Options object as a parameter.
+ */
+export interface Options {
+    frameConstant?: number;
+    linesPerLevel?: number;
+}

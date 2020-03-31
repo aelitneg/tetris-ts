@@ -29,3 +29,21 @@ export declare const GAME_ROWS = 20;
  * per second.
  */
 export declare const FRAME_CONST = 60.0988;
+/**
+ * Lines Per Level
+ *
+ * This option controls how many lines must
+ * be completed to reach the next level.
+ */
+export declare const LINES_PER_LEVEL = 10;
+/**
+ * Options
+ *
+ * This interface describes the exposed options which can
+ * be set by the developer consuming the library. The Tetris
+ * constructor takes an Options object as a parameter.
+ */
+export interface Options {
+    frameConstant?: number;
+    linesPerLevel?: number;
+}
