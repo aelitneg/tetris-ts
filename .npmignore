@@ -1,0 +1,28 @@
+#
+# Node Modules
+#
+node_modules
+
+#
+# ESLint
+#
+.eslintcache
+.eslintignore
+.eslintrc.js
+
+#
+# Prettier
+#
+prettier.config.js
+
+#
+# Docs
+#
+*.md
+*.gif
+
+#
+# WebPack
+#
+webpack.config.js
+webpack.config.dev.js
