@@ -34,4 +34,4 @@ class Tetris {
     }
 }
 
-module.exports = Tetris;
+export default Tetris;
