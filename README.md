@@ -29,7 +29,7 @@ npm install tetris-ts --save
 import Tetris from "tetris-ts";
 
 // CommonJS Require
-const Tetris = require("tetris-ts");
+const Tetris = require("tetris-ts").default;
 ```
 
 The library takes 3 parameters in the constructor
