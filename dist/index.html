@@ -29,19 +29,6 @@
     </body>
 
     <footer>
-        <script src="tetris-ts.js"></script>
-        <script>
-            const tetrisCallback = function(stats) {
-                console.log("GAME OVER");
-                console.log("POINTS:", this.points);
-                console.log("LINES:", this.lineCount);
-                console.log("LEVEL:", this.level);
-            };
-
-            const el = document.getElementById("tetris");
-            const tetris = new Tetris(el, data => {
-                console.log(data);
-            });
-        </script>
+        <script src="main.js"></script>
     </footer>
 </html>

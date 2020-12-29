@@ -8,11 +8,11 @@ module.exports = {
         compress: true,
         port: 9000,
     },
-    entry: "./src/index.ts",
+    entry: "./src/dev-entry.js",
     output: {
         library: "Tetris",
         libraryTarget: "umd",
-        filename: "tetris-ts.js",
+        filename: "main.js",
         path: path.resolve(__dirname, "dist"),
     },
     resolve: {
