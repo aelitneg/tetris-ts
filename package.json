@@ -18,7 +18,7 @@
     "scripts": {
         "build:prod": "webpack --config ./webpack.config.js",
         "build:dev": "webpack --config ./webpack.config.dev.js",
-        "dev": "webpack-dev-server --open --config ./webpack.config.dev.js"
+        "dev": "webpack serve --config ./webpack.config.dev.js"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.9.1",
