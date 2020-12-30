@@ -47,7 +47,7 @@ _Important: The width of the DOM element determines the size of the game._
 ```javascript
 const el = document.getElementById("tetris");
 
-const callback = function(data) {
+const callback = function (data) {
     // Do something with the data returned from the game
 };
 
