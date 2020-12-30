@@ -78,6 +78,7 @@ export default class Render {
             { name: "RIGHT ARROW", desc: "MOVE RIGHT" },
             { name: "DOWN ARROW", desc: "MOVE DOWN" },
             { name: "UP ARROW", desc: "ROTATE" },
+            { name: "ENTER", desc: "DROP" },
             { name: "SPACE", desc: "PAUSE" },
             { name: "ESC", desc: "QUIT" },
         ];
