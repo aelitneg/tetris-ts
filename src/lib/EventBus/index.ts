@@ -95,7 +95,7 @@ export class EventBus {
      * @param event name of event
      */
     publish(event: GameEvent): void {
-        this.handlers.forEach(h => {
+        this.handlers.forEach((h) => {
             if (h.event === event.event) {
                 h.handler(event);
             }
@@ -107,7 +107,7 @@ export class EventBus {
      * @param event name of event
      */
     publishGamePieceEvent(event: GamePieceEvent): void {
-        this.handlers.forEach(h => {
+        this.handlers.forEach((h) => {
             if (h.event === event.event) {
                 h.handler(event);
             }
@@ -119,7 +119,7 @@ export class EventBus {
      * @param event name of event
      */
     publishRowEvent(event: RowEvent): void {
-        this.handlers.forEach(h => {
+        this.handlers.forEach((h) => {
             if (h.event === event.event) {
                 h.handler(event);
             }
@@ -131,7 +131,7 @@ export class EventBus {
      * @param event name of event
      */
     publishStatsEvent(event: StatsEvent): void {
-        this.handlers.forEach(h => {
+        this.handlers.forEach((h) => {
             if (h.event === event.event) {
                 h.handler(event);
             }
