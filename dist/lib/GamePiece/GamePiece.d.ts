@@ -30,4 +30,8 @@ export default class GamePiece {
      * This method is overriden in each GamePiece sub class
      */
     getTransform(): Array<Coordinate>;
+    /**
+     * Return deep clone of position
+     */
+    clonePosition(): Array<Coordinate>;
 }

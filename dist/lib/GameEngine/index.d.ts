@@ -83,6 +83,14 @@ export default class GameEngine {
      */
     moveDown(): void;
     /**
+     * Move active piece to bottom of current columns
+     */
+    drop(): void;
+    /**
+     * Recursively find drop transform by down transforms
+     */
+    _getDropTransform(): void;
+    /**
      * Check if a transform removes lock for piece
      */
     lockCheck(): void;
