@@ -80,4 +80,15 @@ export default class GamePiece {
         // Return default transform
         return this.position;
     }
+
+    /**
+     * Return deep clone of position
+     */
+    clonePosition(): Array<Coordinate> {
+        return this.position.map((src) => {
+            const target: Coordinate = { x: undefined, y: undefined };
+            Object.assign(target, src);
+            return target;
+        });
+    }
 }
