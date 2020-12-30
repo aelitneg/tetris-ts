@@ -39,7 +39,7 @@ export default class GamePiece {
     getLeftTransform(): Array<Coordinate> {
         const transform: Array<Coordinate> = [];
 
-        this.position.forEach(p => {
+        this.position.forEach((p) => {
             transform.push({ x: p.x - 1, y: p.y });
         });
 
@@ -52,7 +52,7 @@ export default class GamePiece {
     getRightTransform(): Array<Coordinate> {
         const transform: Array<Coordinate> = [];
 
-        this.position.forEach(p => {
+        this.position.forEach((p) => {
             transform.push({ x: p.x + 1, y: p.y });
         });
 
@@ -65,7 +65,7 @@ export default class GamePiece {
     getDownTransform(): Array<Coordinate> {
         const transform: Array<Coordinate> = [];
 
-        this.position.forEach(p => {
+        this.position.forEach((p) => {
             transform.push({ x: p.x, y: p.y + 1 });
         });
 

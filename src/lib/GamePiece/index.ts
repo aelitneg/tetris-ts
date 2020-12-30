@@ -54,7 +54,7 @@ export interface Coordinate {
  * This function returns an instance of
  * a class exntended by GamePiece.
  */
-export const newGamePiece = function(): GamePiece {
+export const newGamePiece = function (): GamePiece {
     const gamePieceType: GamePieceType = Math.floor(
         Math.random() * Math.floor(7)
     );

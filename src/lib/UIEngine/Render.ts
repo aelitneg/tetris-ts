@@ -185,8 +185,9 @@ export default class Render {
         for (let r = 0; r < GAME_ROWS; r++) {
             const row = document.createElement("div");
             row.classList.add("game-row");
-            row.style.cssText = `height: ${this.uiElements.gameBoard
-                .clientWidth / GAME_COLS}px;`;
+            row.style.cssText = `height: ${
+                this.uiElements.gameBoard.clientWidth / GAME_COLS
+            }px;`;
 
             for (let c = 0; c < GAME_COLS; c++) {
                 const space = document.createElement("div");
@@ -223,7 +224,7 @@ export default class Render {
      * @param gamePiece
      */
     drawGamePiece(gamePiece: GamePiece): void {
-        gamePiece.position.forEach(piece => {
+        gamePiece.position.forEach((piece) => {
             const el = this.uiElements.gameBoard.children[piece.y].children[
                 piece.x
             ];
@@ -242,7 +243,7 @@ export default class Render {
      * @param gamePiece
      */
     eraseGamePiece(gamePiece: GamePiece): void {
-        gamePiece.position.forEach(piece => {
+        gamePiece.position.forEach((piece) => {
             const el = this.uiElements.gameBoard.children[piece.y].children[
                 piece.x
             ];
@@ -254,8 +255,9 @@ export default class Render {
     drawRow(): void {
         const row = document.createElement("div");
         row.classList.add("game-row");
-        row.style.cssText = `height: ${this.uiElements.gameBoard.clientWidth /
-            GAME_COLS}px;`;
+        row.style.cssText = `height: ${
+            this.uiElements.gameBoard.clientWidth / GAME_COLS
+        }px;`;
 
         for (let c = 0; c < GAME_COLS; c++) {
             const space = document.createElement("div");
@@ -274,7 +276,7 @@ export default class Render {
      * @param rows row indexes to remove
      */
     removeRow(rows: Array<number>): void {
-        rows.forEach(row => {
+        rows.forEach((row) => {
             this.uiElements.gameBoard.children[row].remove();
             this.drawRow();
         });
@@ -302,7 +304,7 @@ export default class Render {
     setNextPieceActive(position: Array<Coordinate>, color: Color): void {
         const nextPiece = this.uiElements.nextPiece;
 
-        position.forEach(c => {
+        position.forEach((c) => {
             const p = nextPiece.children[c.y].children[c.x];
             p.setAttribute(
                 "style",
