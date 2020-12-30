@@ -266,7 +266,7 @@ export default class GameEngine {
      */
     validateGamePiece(position: Array<Coordinate>): boolean {
         let isValid = true;
-        position.forEach(p => {
+        position.forEach((p) => {
             if (this.stateMap[p.y][p.x]) {
                 isValid = false;
             }
@@ -295,7 +295,7 @@ export default class GameEngine {
         }
 
         if (completeRows.length) {
-            completeRows.forEach(i => {
+            completeRows.forEach((i) => {
                 this.stateMap.splice(i, 1);
                 const row: Array<boolean> = [];
                 for (let i = 0; i < GAME_COLS; i++) {
@@ -318,7 +318,7 @@ export default class GameEngine {
      * @param gamePiece GamePiece
      */
     addToStateMap(gamePiece: GamePiece): void {
-        gamePiece.position.forEach(p => {
+        gamePiece.position.forEach((p) => {
             this.stateMap[p.y][p.x] = true;
         });
     }
@@ -328,7 +328,7 @@ export default class GameEngine {
      * @param gamePiece GamePiece
      */
     removeFromStateMap(gamePiece: GamePiece): void {
-        gamePiece.position.forEach(p => {
+        gamePiece.position.forEach((p) => {
             this.stateMap[p.y][p.x] = false;
         });
     }
@@ -466,7 +466,7 @@ export default class GameEngine {
     validateTransform(transform: Array<Coordinate>): boolean {
         let isValid = true;
 
-        transform.forEach(p => {
+        transform.forEach((p) => {
             if (!this.validateCoordinateTransform(p)) {
                 isValid = false;
             }
@@ -507,7 +507,7 @@ export default class GameEngine {
      */
     isActivePiece(c: Coordinate): boolean {
         try {
-            this.activePiece.position.forEach(p => {
+            this.activePiece.position.forEach((p) => {
                 if (c.x == p.x && c.y == p.y) {
                     throw true;
                 }

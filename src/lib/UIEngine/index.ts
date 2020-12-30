@@ -50,7 +50,7 @@ export default class UIEngine {
      * repeat key when a key is held down.
      */
     createInputListeners(): void {
-        document.addEventListener("keydown", e => {
+        document.addEventListener("keydown", (e) => {
             switch (e.code) {
                 case "ArrowLeft":
                     e.preventDefault();
@@ -191,7 +191,7 @@ export default class UIEngine {
 
         this.rootElement.innerHTML = "";
 
-        Object.keys(this.uiElements).forEach(key => {
+        Object.keys(this.uiElements).forEach((key) => {
             delete this.uiElements[key];
         });
 
