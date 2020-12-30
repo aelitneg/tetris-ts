@@ -88,6 +88,10 @@ export default class GameEngine {
             this.transform();
         });
 
+        this.eventBus.subscribe("INPUT_ENTER", () => {
+            this.drop();
+        });
+
         this.eventBus.subscribe("INPUT_SPACE", () => {
             this.togglePauseGame();
         });
@@ -421,6 +425,61 @@ export default class GameEngine {
                 this.lockCheck();
             }
         }
+    }
+
+    /**
+     * Move active piece to bottom of current columns
+     */
+    drop(): void {
+        if (this.gameState != GameState.PLAYING) {
+            return;
+        }
+
+        // Check if down in a valid direction
+        const transform: Array<Coordinate> = this.activePiece.getDownTransform();
+        if (!this.validateTransform(transform)) {
+            return;
+        }
+
+        const currentPosition: Array<Coordinate> = this.activePiece.clonePosition();
+
+        this._getDropTransform();
+
+        const finalPosition: Array<Coordinate> = this.activePiece.clonePosition();
+
+        // Reset the position of the active piece to remove from state map and UI
+        this.activePiece.position = currentPosition;
+        this.removeFromStateMap(this.activePiece);
+        this.eventBus.publishGamePieceEvent({
+            event: "ERASE_ACTIVE",
+            gamePiece: this.activePiece,
+        });
+
+        // Set the new position of the active piece
+        this.activePiece.position = finalPosition;
+        this.addToStateMap(this.activePiece);
+        this.eventBus.publishGamePieceEvent({
+            event: "DRAW_ACTIVE",
+            gamePiece: this.activePiece,
+        });
+
+        if (this.activePiece.locking) {
+            this.lockCheck();
+        }
+    }
+
+    /**
+     * Recursively find drop transform by down transforms
+     */
+    _getDropTransform(): void {
+        const nextTransform = this.activePiece.getDownTransform();
+
+        if (!this.validateTransform(nextTransform)) {
+            return;
+        }
+
+        this.activePiece.position = nextTransform;
+        return this._getDropTransform();
     }
 
     /**

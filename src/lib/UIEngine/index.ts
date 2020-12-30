@@ -51,29 +51,27 @@ export default class UIEngine {
      */
     createInputListeners(): void {
         document.addEventListener("keydown", (e) => {
+            e.preventDefault();
             switch (e.code) {
                 case "ArrowLeft":
-                    e.preventDefault();
                     this.eventBus.publish({ event: "INPUT_LEFT" });
                     break;
                 case "ArrowRight":
-                    e.preventDefault();
                     this.eventBus.publish({ event: "INPUT_RIGHT" });
                     break;
                 case "ArrowDown":
-                    e.preventDefault();
                     this.eventBus.publish({ event: "INPUT_DOWN" });
                     break;
                 case "ArrowUp":
-                    e.preventDefault();
                     this.eventBus.publish({ event: "INPUT_UP" });
                     break;
+                case "Enter":
+                    this.eventBus.publish({ event: "INPUT_ENTER" });
+                    break;
                 case "Space":
-                    e.preventDefault();
                     this.eventBus.publish({ event: "INPUT_SPACE" });
                     break;
                 case "Escape":
-                    e.preventDefault();
                     this.eventBus.publish({ event: "INPUT_ESC" });
                     break;
             }
