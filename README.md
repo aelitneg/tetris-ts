@@ -26,10 +26,10 @@ npm install tetris-ts --save
 
 ```javascript
 // ES6 Import
-import Tetris from "tetris-ts";
+import Tetris from 'tetris-ts';
 
 // CommonJS Require
-const Tetris = require("tetris-ts").default;
+const Tetris = require('tetris-ts').default;
 ```
 
 The library takes 3 parameters in the constructor
@@ -45,7 +45,7 @@ _Important: The width of the DOM element determines the size of the game._
 ```
 
 ```javascript
-const el = document.getElementById("tetris");
+const el = document.getElementById('tetris');
 
 const callback = function (data) {
     // Do something with the data returned from the game
