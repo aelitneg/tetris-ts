@@ -6,7 +6,7 @@
 
 A simple Tetris clone written in plain Typescript.
 
-![](screenshot.gif)
+![](https://i.imgur.com/PmpHMpb.gif)
 
 ## Installation
 
