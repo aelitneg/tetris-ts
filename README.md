@@ -1,6 +1,6 @@
 # tetris-ts
 
-[![NPM version](https://badge.fury.io/js/badge-list.svg)](https://npmjs.org/tetris-ts)
+[![npm version](https://badge.fury.io/js/tetris-ts.svg)](https://badge.fury.io/js/tetris-ts)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
